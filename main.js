@@ -65,6 +65,7 @@ function handleClick(e) {
     if (piece && movingPiece == null) {
         movingPiece = [piece, i, j]
     } else if (movingPiece) {
+        console.log(movingPiece, desired)
         if (checkValidMove(movingPiece, desired)) {
             board[i][j] = movingPiece[0]
             board[movingPiece[1]][movingPiece[2]] = null
@@ -82,6 +83,7 @@ function handleClick(e) {
 }
 
 function checkValidMove(moving, desired) {
+    // black pawn logic
     if (moving[0] === 'bP') {
         if (board[desired[0]][desired[1]] === null) {
             if (moving[1] - 1 == desired[0] && moving[2] == desired[1]) {
@@ -98,6 +100,30 @@ function checkValidMove(moving, desired) {
                 console.log("Opponent")
                 console.log(moving, desired)
                 if (moving[1] - 1 == desired[0] && (moving[2] -1 == desired[1] || moving[2] +1 == desired[1])) {
+                    console.log("CAPTURED!")
+                    return true
+                }
+            }
+        }
+    }
+    // white pawn logic
+    if (moving[0] === 'wP') {
+        if (board[desired[0]][desired[1]] === null) {
+            console.log("HITTING WP IF ", Number(moving[1]) +1, desired[0], moving[2], desired[1])
+            if (Number(moving[1]) + 1 == desired[0] && moving[2] == desired[1]) {
+                console.log("WE'VE GOT A VALID MOVE!")
+                return true
+            }
+        } else {
+            if (board[desired[0]][desired[1]].split('')[0] == 'w') {
+                console.log("same team, invalid move!")
+                return false
+            }
+            if (board[desired[0]][desired[1]].split('')[0] == 'b') {
+
+                console.log("Opponent")
+                console.log(moving, desired)
+                if (Number(moving[1]) + 1 == desired[0] && (moving[2] -1 == desired[1] || Number(moving[2]) +1 == desired[1])) {
                     console.log("CAPTURED!")
                     return true
                 }
