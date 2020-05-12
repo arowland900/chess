@@ -16,11 +16,11 @@ let pieceIcons = {
     bK: '♚'
 }
 
-let movements = {
-    wP: {
-
-    }
+let players = {
+    '1': 'w',
+    '-1': 'b'
 }
+
 
 /*----- app's state (variables) -----*/
 let board = [
@@ -29,12 +29,13 @@ let board = [
     [null, null, null, null, null, null, null, null,],
     [null, null, null, null, null, null, null, null,],
     [null, null, null, null, null, null, null, null,],
-    [null, null, null, null, null, null, null, null,],
+    [null, 'wP', null, null, null, null, null, null,],
     ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP',],
     ['bR', 'bKn', 'bB', 'bQ', 'bK', 'bB', 'bKn', 'bR',],
 ]
 let turn = 1
 let movingPiece = null
+let piece = null
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
 
@@ -56,14 +57,23 @@ function init() {
 function handleClick(e) {
     let i = e.target.id.split('')[1]
     let j = e.target.id.split('')[3]
-    let piece = board[i][j]
-    if (piece) {
+    piece = board[i][j]
+    let desired = [i,j]
+
+    
+    console.log("PIECE: ", piece)
+    if (piece && movingPiece == null) {
         movingPiece = [piece, i, j]
     } else if (movingPiece) {
-        checkValidMove(movingPiece, piece)
-        board[i][j] = movingPiece[0]
-        board[movingPiece[1]][movingPiece[2]] = null
-        movingPiece = null
+        if(checkValidMove(movingPiece, desired)){
+            board[i][j] = movingPiece[0]
+            board[movingPiece[1]][movingPiece[2]] = null
+            movingPiece = null
+        } else {
+            movingPiece = [piece, i, j]
+            piece = null
+            console.log("Not a Valid Move")
+        }
     } else {
         console.log('no piece to move')
         return
@@ -71,8 +81,28 @@ function handleClick(e) {
     appendBoard()
 }
 
-function checkValidMove(piece, desiredSquare){
-    
+function checkValidMove(moving, desired){
+    if(moving[0] === 'bP'){
+        if(board[desired[0]][desired[1]] === null){
+            if(moving[1] - 1 == desired[0] && moving[2] == desired[1]){
+            console.log("WE'VE GOT A VALID MOVE!")
+            return true
+            }
+        } else {
+            if(board[desired[0]][desired[1]].split('')[0] == 'b'){
+                console.log("same team, invalid move!")
+                return false
+            }
+            if(board[desired[0]][desired[1]].split('')[0] == 'w'){
+
+                console.log("Opponent")
+                // if(moving[1] -1 == desired[0]  && (moving[2] == desired[1] -1 || moving[2] == desired[1] +1)){
+                console.log("CAPTURED!")
+                return true
+            }
+            // }
+        }
+    }
 }
 
 
