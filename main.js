@@ -22,6 +22,10 @@ function appendBoard(){
             let square = document.createElement('div')
             square.setAttribute('id', `c${i}r${j}`)
             square.setAttribute('class', 'square')
+            console.log((j + i) %2)
+            let x = (j + i) %2
+            x ? square.style.backgroundColor = 'brown' 
+            : square.style.backgroundColor = 'beige'
             // console.log("HELL)
             gameBoard.appendChild(square)
         })

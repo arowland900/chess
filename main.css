@@ -13,10 +13,11 @@ body {
 }
 
 #board {
+    border: 1px solid grey;
     display: grid;
     grid-template-columns: repeat(8, 10vmin);
     grid-template-rows: repeat(8, 10vmin);
-    gap: 1vmin;
+    /* gap: 1vmin; */
 }
 
 #board div {
