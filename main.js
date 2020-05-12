@@ -1,6 +1,15 @@
 console.log("JS LOADED")
 
-let board = new Array(8).fill(new Array(8).fill(null))
+let board = [
+  ['wR','wKn','wB','wK','wQ','wB','wKn','wR',],
+  ['wP','wP','wP','wP','wP','wP','wP','wP',],
+  [null,null,null,null,null,null,null,null,],
+  [null,null,null,null,null,null,null,null,],
+  [null,null,null,null,null,null,null,null,],
+  [null,null,null,null,null,null,null,null,],
+  ['bP','bP','bP','bP','bP','bP','bP','bP',],
+  ['bR','bKn','bB','bQ','bK','bB','bKn','bR',],
+]
 
 let gameBoard = document.getElementById('board')
 
@@ -10,26 +19,27 @@ init()
 function init(){
 
     appendBoard()
+    render()
 }
+
+
 
 function appendBoard(){
     board.forEach((e,i) => {
-        // let row = document.createElement('div')
-        // row.setAttribute('id', `row${i}`)
-        // gameBoard.appendChild(row)
-        
         e.forEach((f, j) => {
             let square = document.createElement('div')
             square.setAttribute('id', `c${i}r${j}`)
             square.setAttribute('class', 'square')
-            console.log((j + i) %2)
+            console.log(f)
             let x = (j + i) %2
             x ? square.style.backgroundColor = 'brown' 
             : square.style.backgroundColor = 'beige'
-            // console.log("HELL)
+            square.textContent = f
             gameBoard.appendChild(square)
         })
     })
 }
 
-console.log(gameBoard)
+function render(){
+
+}
