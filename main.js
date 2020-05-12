@@ -58,14 +58,14 @@ function handleClick(e) {
     let i = e.target.id.split('')[1]
     let j = e.target.id.split('')[3]
     piece = board[i][j]
-    let desired = [i,j]
+    let desired = [i, j]
 
-    
+
     console.log("PIECE: ", piece)
     if (piece && movingPiece == null) {
         movingPiece = [piece, i, j]
     } else if (movingPiece) {
-        if(checkValidMove(movingPiece, desired)){
+        if (checkValidMove(movingPiece, desired)) {
             board[i][j] = movingPiece[0]
             board[movingPiece[1]][movingPiece[2]] = null
             movingPiece = null
@@ -81,26 +81,27 @@ function handleClick(e) {
     appendBoard()
 }
 
-function checkValidMove(moving, desired){
-    if(moving[0] === 'bP'){
-        if(board[desired[0]][desired[1]] === null){
-            if(moving[1] - 1 == desired[0] && moving[2] == desired[1]){
-            console.log("WE'VE GOT A VALID MOVE!")
-            return true
+function checkValidMove(moving, desired) {
+    if (moving[0] === 'bP') {
+        if (board[desired[0]][desired[1]] === null) {
+            if (moving[1] - 1 == desired[0] && moving[2] == desired[1]) {
+                console.log("WE'VE GOT A VALID MOVE!")
+                return true
             }
         } else {
-            if(board[desired[0]][desired[1]].split('')[0] == 'b'){
+            if (board[desired[0]][desired[1]].split('')[0] == 'b') {
                 console.log("same team, invalid move!")
                 return false
             }
-            if(board[desired[0]][desired[1]].split('')[0] == 'w'){
+            if (board[desired[0]][desired[1]].split('')[0] == 'w') {
 
                 console.log("Opponent")
-                // if(moving[1] -1 == desired[0]  && (moving[2] == desired[1] -1 || moving[2] == desired[1] +1)){
-                console.log("CAPTURED!")
-                return true
+                console.log(moving, desired)
+                if (moving[1] - 1 == desired[0] && (moving[2] -1 == desired[1] || moving[2] +1 == desired[1])) {
+                    console.log("CAPTURED!")
+                    return true
+                }
             }
-            // }
         }
     }
 }
