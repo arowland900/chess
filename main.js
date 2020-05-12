@@ -23,25 +23,18 @@ let players = {
 
 
 /*----- app's state (variables) -----*/
-let board = [
-    ['wR', 'wKn', 'wB', 'wK', 'wQ', 'wB', 'wKn', 'wR',],
-    ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP',],
-    [null, null, null, null, null, null, null, null,],
-    [null, null, null, null, null, null, null, null,],
-    [null, null, null, null, null, null, null, null,],
-    [null, 'wP', null, null, null, null, null, null,],
-    ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP',],
-    ['bR', 'bKn', 'bB', 'bQ', 'bK', 'bB', 'bKn', 'bR',],
-]
+let board;
 let turn = 1
 let movingPiece = null
 let piece = null
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
+let reset = document.querySelector('button')
 
 /*----- event listeners -----*/
 document.getElementById('board')
     .addEventListener('click', handleClick);
+reset.addEventListener('click', init);
 /*----- functions -----*/
 
 
@@ -49,7 +42,16 @@ document.getElementById('board')
 init()
 
 function init() {
-
+    board = [
+        ['wR', 'wKn', 'wB', 'wK', 'wQ', 'wB', 'wKn', 'wR',],
+        ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP',],
+        [null, null, null, null, null, null, null, null,],
+        [null, null, null, null, null, null, null, null,],
+        [null, null, null, null, null, null, null, null,],
+        [null, null, null, null, null, null, null, null,],
+        ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP',],
+        ['bR', 'bKn', 'bB', 'bQ', 'bK', 'bB', 'bKn', 'bR',],
+    ]
     appendBoard()
     // render()
 }
@@ -87,20 +89,21 @@ function checkValidMove(moving, desired) {
     if (moving[0] === 'bP') {
         if (board[desired[0]][desired[1]] === null) {
             if (moving[1] - 1 == desired[0] && moving[2] == desired[1]) {
-                console.log("WE'VE GOT A VALID MOVE!")
+                // console.log("WE'VE GOT A VALID MOVE!")
+                return true
+            } else if (moving[1] == 6 && desired[0] == 4 && moving[2] == desired[1]) {
                 return true
             }
+
         } else {
             if (board[desired[0]][desired[1]].split('')[0] == 'b') {
-                console.log("same team, invalid move!")
+                // console.log("same team, invalid move!")
                 return false
             }
             if (board[desired[0]][desired[1]].split('')[0] == 'w') {
-
-                console.log("Opponent")
-                console.log(moving, desired)
-                if (moving[1] - 1 == desired[0] && (moving[2] -1 == desired[1] || moving[2] +1 == desired[1])) {
-                    console.log("CAPTURED!")
+                // console.log("Opponent")
+                if (moving[1] - 1 == desired[0] && (moving[2] - 1 == desired[1] || moving[2] + 1 == desired[1])) {
+                    // console.log("CAPTURED!")
                     return true
                 }
             }
@@ -109,22 +112,23 @@ function checkValidMove(moving, desired) {
     // white pawn logic
     if (moving[0] === 'wP') {
         if (board[desired[0]][desired[1]] === null) {
-            console.log("HITTING WP IF ", Number(moving[1]) +1, desired[0], moving[2], desired[1])
             if (Number(moving[1]) + 1 == desired[0] && moving[2] == desired[1]) {
-                console.log("WE'VE GOT A VALID MOVE!")
+                // console.log("WE'VE GOT A VALID MOVE!")
+                return true
+            } else if (moving[1] == 1 && desired[0] == 3 && moving[2] == desired[1]) {
                 return true
             }
+
         } else {
             if (board[desired[0]][desired[1]].split('')[0] == 'w') {
-                console.log("same team, invalid move!")
+                // console.log("same team, invalid move!")
                 return false
             }
             if (board[desired[0]][desired[1]].split('')[0] == 'b') {
 
-                console.log("Opponent")
-                console.log(moving, desired)
-                if (Number(moving[1]) + 1 == desired[0] && (moving[2] -1 == desired[1] || Number(moving[2]) +1 == desired[1])) {
-                    console.log("CAPTURED!")
+                // console.log("Opponent")
+                if (Number(moving[1]) + 1 == desired[0] && (moving[2] - 1 == desired[1] || Number(moving[2]) + 1 == desired[1])) {
+                    // console.log("CAPTURED!")
                     return true
                 }
             }
