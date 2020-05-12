@@ -15,16 +15,14 @@ let pieceIcons = {
     bQ: '♛',
     bK: '♚'
 }
-
 let players = {
     '1': 'w',
     '-1': 'b'
 }
 
-
 /*----- app's state (variables) -----*/
 let board;
-let turn = 1
+let turn;
 let movingPiece = null
 let piece = null
 /*----- cached element references -----*/
@@ -42,6 +40,7 @@ reset.addEventListener('click', init);
 init()
 
 function init() {
+    turn = 1
     board = [
         ['wR', 'wKn', 'wB', 'wK', 'wQ', 'wB', 'wKn', 'wR',],
         ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP',],
@@ -72,16 +71,20 @@ function handleClick(e) {
             board[i][j] = movingPiece[0]
             board[movingPiece[1]][movingPiece[2]] = null
             movingPiece = null
+            appendBoard()
+            turn *= -1
         } else {
             movingPiece = [piece, i, j]
             piece = null
             console.log("Not a Valid Move")
+            return
         }
     } else {
         console.log('no piece to move')
         return
     }
-    appendBoard()
+    
+    
 }
 
 function checkValidMove(moving, desired) {
