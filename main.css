@@ -1,5 +1,6 @@
 *, *::before, *::after {
     box-sizing: border-box;
+    
 }
 
 body {
@@ -23,4 +24,11 @@ body {
 #board div {
     /* border-radius: 50%; */
     border: 1px solid grey;
-  }
+}
+
+.square {
+    font-size: 6vh;
+    text-align: center;
+    color: black;
+    background-color: white;
+}
