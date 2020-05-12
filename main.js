@@ -30,8 +30,7 @@ let gameBoard = document.getElementById('board')
 let reset = document.querySelector('button')
 
 /*----- event listeners -----*/
-document.getElementById('board')
-    .addEventListener('click', handleClick);
+gameBoard.addEventListener('click', handleClick);
 reset.addEventListener('click', init);
 /*----- functions -----*/
 
@@ -52,15 +51,28 @@ function init() {
         ['bR', 'bKn', 'bB', 'bQ', 'bK', 'bB', 'bKn', 'bR',],
     ]
     appendBoard()
-    // render()
 }
 
 function handleClick(e) {
+
     let i = e.target.id.split('')[1]
     let j = e.target.id.split('')[3]
     piece = board[i][j]
     let desired = [i, j]
-
+    if (movingPiece) {
+        if (turn === 1 && movingPiece[0].split('')[0] != 'w') {
+            console.log(movingPiece[0].split('')[0])
+            movingPiece = null
+            piece = null
+            return
+        }
+        if (turn === -1 && movingPiece[0].split('')[0] != 'b') {
+            console.log("LATERHIT")
+            movingPiece = null
+            piece = null
+            return
+        }
+    }
 
     console.log("PIECE: ", piece)
     if (piece && movingPiece == null) {
@@ -83,8 +95,8 @@ function handleClick(e) {
         console.log('no piece to move')
         return
     }
-    
-    
+
+
 }
 
 function checkValidMove(moving, desired) {
