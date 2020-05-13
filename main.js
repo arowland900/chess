@@ -152,21 +152,21 @@ class Bishop extends Piece {
         } else if (Math.abs(j - desiredJ) !== Math.abs(i - desiredI)) {
             return false
         } else {
-            if(i < desiredI && j < desiredJ){
-                for(let startI = i + 1, startJ = j + 1; startI < desiredI; startI++, startJ++){
-                    if(board[startI][startJ]) return false
+            if (i < desiredI && j < desiredJ) {
+                for (let startI = i + 1, startJ = j + 1; startI < desiredI; startI++, startJ++) {
+                    if (board[startI][startJ]) return false
                 }
-            } else if(i < desiredI && j > desiredJ){
-                for(let startI = i + 1, startJ = j - 1; startI < desiredI; startI++, startJ--){
-                    if(board[startI][startJ]) return false
+            } else if (i < desiredI && j > desiredJ) {
+                for (let startI = i + 1, startJ = j - 1; startI < desiredI; startI++, startJ--) {
+                    if (board[startI][startJ]) return false
                 }
-            } else if(i > desiredI && j < desiredJ){
-                for(let startI = i - 1, startJ = j + 1; startI > desiredI; startI--, startJ++){
-                    if(board[startI][startJ]) return false
+            } else if (i > desiredI && j < desiredJ) {
+                for (let startI = i - 1, startJ = j + 1; startI > desiredI; startI--, startJ++) {
+                    if (board[startI][startJ]) return false
                 }
             } else {
-                for(let startI = i - 1, startJ = j - 1; startI > desiredI; startI--, startJ--){
-                    if(board[startI][startJ]) return false
+                for (let startI = i - 1, startJ = j - 1; startI > desiredI; startI--, startJ--) {
+                    if (board[startI][startJ]) return false
                 }
             }
         }
@@ -197,9 +197,9 @@ class Rook extends Piece {
         let selectedValue = board[desiredI][desiredJ]
         if (i !== desiredI && j !== desiredJ) {
             return false
-        // rooks moving left & right
+            // rooks moving left & right
         } else if (i == desiredI && j !== desiredJ) {
-            if (j > desiredJ) {
+            if (j < desiredJ) {
 
                 for (let start = j + 1; start < desiredJ; start++) {
                     console.log("HITTING", board[i][start])
@@ -215,7 +215,7 @@ class Rook extends Piece {
                     }
                 }
             }
-        // rooks moving up & down
+            // rooks moving up & down
         } else if (j == desiredJ && i !== desiredI) {
             if (i > desiredI) {
                 for (let start = i - 1; start > desiredI; start--) {
@@ -252,6 +252,82 @@ class Queen extends Piece {
         this.icon = icon
     }
     checkMove() {
+        console.log("HITTING QUEEN")
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        let desiredI = state.selectedSquare[0]
+        let desiredJ = state.selectedSquare[1]
+        let selectedValue = board[desiredI][desiredJ]
+        if (i !== desiredI && j !== desiredJ) {
+            if(Math.abs(j - desiredJ) !== Math.abs(i - desiredI)){
+                return false
+            }
+            console.log("DIAGONAL QUEEN")
+            if (i < desiredI && j < desiredJ) {
+                for (let startI = i + 1, startJ = j + 1; startI < desiredI; startI++, startJ++) {
+                    if (board[startI][startJ]) return false
+                }
+            } else if (i < desiredI && j > desiredJ) {
+                for (let startI = i + 1, startJ = j - 1; startI < desiredI; startI++, startJ--) {
+                    if (board[startI][startJ]) return false
+                }
+            } else if (i > desiredI && j < desiredJ) {
+                for (let startI = i - 1, startJ = j + 1; startI > desiredI; startI--, startJ++) {
+                    if (board[startI][startJ]) return false
+                }
+            } else {
+                for (let startI = i - 1, startJ = j - 1; startI > desiredI; startI--, startJ--) {
+                    console.log("HITTING DIAGONAL BACK  ")
+                    if (board[startI][startJ]) return false
+                }
+            }
+        } else {
+            console.log("HELLOOOOOOOO")
+            if (i == desiredI && j !== desiredJ) {
+                if (j < desiredJ) {
+
+                    for (let start = j + 1; start < desiredJ; start++) {
+                        console.log("HITTING", board[i][start])
+                        if (board[i][start] !== null) {
+                            return false
+                        }
+                    }
+                } else {
+                    for (let start = j - 1; start > desiredJ; start--) {
+                        console.log("HITTING", board[i][start])
+                        if (board[i][start] !== null) {
+                            return false
+                        }
+                    }
+                }
+            }
+            else if (j == desiredJ && i !== desiredI) {
+                // queen moving up & down
+                if (i > desiredI) {
+                    for (let start = i - 1; start > desiredI; start--) {
+                        console.log("HITTING", board[start][j])
+                        if (board[start][j] !== null) {
+                            return false
+                        }
+                    }
+                } else {
+                    for (let start = i + 1; start < desiredI; start++) {
+                        console.log("HITTING", board[start][j])
+                        if (board[start][j] !== null) {
+                            return false
+                        }
+                    }
+                }
+            } else {
+                return false
+            }
+        }
+        if (selectedValue == null) return true
+        else if (selectedValue.team != this.team) {
+            console.log("HIT OPPONENT : ", state.movingPiece)
+
+            return true
+        }
 
     }
 }
