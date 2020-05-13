@@ -152,9 +152,23 @@ class Bishop extends Piece {
         } else if (Math.abs(j - desiredJ) !== Math.abs(i - desiredI)) {
             return false
         } else {
-            // for(let startI = i, startJ = j; startI < ){
-
-            // }
+            if(i < desiredI && j < desiredJ){
+                for(let startI = i + 1, startJ = j + 1; startI < desiredI; startI++, startJ++){
+                    if(board[startI][startJ]) return false
+                }
+            } else if(i < desiredI && j > desiredJ){
+                for(let startI = i + 1, startJ = j - 1; startI < desiredI; startI++, startJ--){
+                    if(board[startI][startJ]) return false
+                }
+            } else if(i > desiredI && j < desiredJ){
+                for(let startI = i - 1, startJ = j + 1; startI > desiredI; startI--, startJ++){
+                    if(board[startI][startJ]) return false
+                }
+            } else {
+                for(let startI = i - 1, startJ = j - 1; startI > desiredI; startI--, startJ--){
+                    if(board[startI][startJ]) return false
+                }
+            }
         }
         if (selectedValue == null) return true
         else if (selectedValue.team != this.team) {
@@ -183,6 +197,7 @@ class Rook extends Piece {
         let selectedValue = board[desiredI][desiredJ]
         if (i !== desiredI && j !== desiredJ) {
             return false
+        // rooks moving left & right
         } else if (i == desiredI && j !== desiredJ) {
             if (j > desiredJ) {
 
@@ -200,7 +215,7 @@ class Rook extends Piece {
                     }
                 }
             }
-
+        // rooks moving up & down
         } else if (j == desiredJ && i !== desiredI) {
             if (i > desiredI) {
                 for (let start = i - 1; start > desiredI; start--) {
