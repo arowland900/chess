@@ -1,14 +1,14 @@
 console.log("JS LOADED")
 
 /*----- constants -----*/
-const icons = {
-    Pawn: '♟',
-    Knight: '♞',
-    Bishop: '♝',
-    Rook: '♜',
-    Queen: '♛',
-    King: '♚'
-}
+// const icons = {
+//     Pawn: '♟',
+//     Knight: '♞',
+//     Bishop: '♝',
+//     Rook: '♜',
+//     Queen: '♛',
+//     King: '♚'
+// }
 const players = {
     '1': 'white',
     '-1': 'black'
@@ -39,6 +39,9 @@ class Piece {
         this.pos = pos
         this.prev = prev
         this.icon = icon
+    }
+    isMyKingChecked() {
+
     }
     canMove() {
         if (players[state.turn] == this.team) return true
@@ -349,7 +352,7 @@ class King extends Piece {
         let desiredI = state.selectedSquare[0]
         let desiredJ = state.selectedSquare[1]
         let selectedValue = board[desiredI][desiredJ]
-        if(Math.abs(i - desiredI) > 1 || Math.abs(j - desiredJ) > 1) return false 
+        if (Math.abs(i - desiredI) > 1 || Math.abs(j - desiredJ) > 1) return false
         if (selectedValue == null) return true
         else if (selectedValue.team != this.team) {
             console.log("HIT OPPONENT : ", state.movingPiece)
@@ -366,42 +369,44 @@ class King extends Piece {
 
 /*----- functions -----*/
 // initialize board and fill it with pieces at starting position
-let board = new Array(8).fill(new Array(8).fill(null))
-
-board = board.map((row, i) => {
-    return row.map((sq, j) => {
-        if (!i) {
-            if (!j || j == 7) return new Rook('white', `r${i}c${j}`, [], '♖')
-            else if (j == 1 || j == 6) return new Knight('white', `r${i}c${j}`, [], '♘')
-            else if (j == 2 || j == 5) return new Bishop('white', `r${i}c${j}`, [], '♗')
-            else if (j == 4) return new Queen('white', `r${i}c${j}`, [], '♕')
-            else return new King('white', `r${i}c${j}`, [], '♔')
-        }
-        if (i == 1) return new Pawn('white', `r${i}c${j}`, [], '♙')
-        if (i == 6) return new Pawn('black', `r${i}c${j}`, [], '♟')
-        if (i == 7) {
-            if (!j || j == 7) return new Rook('black', `r${i}c${j}`, [], '♜')
-            else if (j == 1 || j == 6) return new Knight('black', `r${i}c${j}`, [], '♞')
-            else if (j == 2 || j == 5) return new Bishop('black', `r${i}c${j}`, [], '♝')
-            else if (j == 4) return new Queen('black', `r${i}c${j}`, [], '♛')
-            else return new King('black', `r${i}c${j}`, [], '♚')
-        }
-        return sq
-    })
-})
 
 init()
 
 function init() {
+    state.turn = 1
+    board = new Array(8).fill(new Array(8).fill(null))
+
+    board = board.map((row, i) => {
+        return row.map((sq, j) => {
+            if (!i) {
+                if (!j || j == 7) return new Rook('white', `r${i}c${j}`, [], '♖')
+                else if (j == 1 || j == 6) return new Knight('white', `r${i}c${j}`, [], '♘')
+                else if (j == 2 || j == 5) return new Bishop('white', `r${i}c${j}`, [], '♗')
+                else if (j == 4) return new Queen('white', `r${i}c${j}`, [], '♕')
+                else return new King('white', `r${i}c${j}`, [], '♔')
+            }
+            if (i == 1) return new Pawn('white', `r${i}c${j}`, [], '♙')
+            if (i == 6) return new Pawn('black', `r${i}c${j}`, [], '♟')
+            if (i == 7) {
+                if (!j || j == 7) return new Rook('black', `r${i}c${j}`, [], '♜')
+                else if (j == 1 || j == 6) return new Knight('black', `r${i}c${j}`, [], '♞')
+                else if (j == 2 || j == 5) return new Bishop('black', `r${i}c${j}`, [], '♝')
+                else if (j == 4) return new Queen('black', `r${i}c${j}`, [], '♛')
+                else return new King('black', `r${i}c${j}`, [], '♚')
+            }
+            return sq
+        })
+    })
 
     renderBoard()
 }
 
-function checkForCheck(){
+function checkForCheck() {
     // before letting a piece move, determine if move puts own king in check.
     // if so, move is invalid
 
     // after moving a piece, determine if opposing team is now in check
+
 }
 
 function movePiece(i, j) {
