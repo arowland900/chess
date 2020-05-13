@@ -259,7 +259,7 @@ class Queen extends Piece {
         let desiredJ = state.selectedSquare[1]
         let selectedValue = board[desiredI][desiredJ]
         if (i !== desiredI && j !== desiredJ) {
-            if(Math.abs(j - desiredJ) !== Math.abs(i - desiredI)){
+            if (Math.abs(j - desiredJ) !== Math.abs(i - desiredI)) {
                 return false
             }
             console.log("DIAGONAL QUEEN")
@@ -341,6 +341,20 @@ class King extends Piece {
         this.icon = icon
     }
     checkMove() {
+        console.log("HITTING KING")
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        let desiredI = state.selectedSquare[0]
+        let desiredJ = state.selectedSquare[1]
+        let selectedValue = board[desiredI][desiredJ]
+        if(Math.abs(i - desiredI) > 1 || Math.abs(j - desiredJ) > 1) return false 
+        if (selectedValue == null) return true
+        else if (selectedValue.team != this.team) {
+            console.log("HIT OPPONENT : ", state.movingPiece)
+
+            return true
+        }
+
 
     }
 }
