@@ -56,24 +56,23 @@ class Pawn extends Piece {
         this.icon = icon
     }
     checkMove() {
-        // console.log("HITTING")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
         let newI = Number(state.selectedSquare[0])
         let newJ = Number(state.selectedSquare[1])
         let newPosition = board[newI][newJ]
-        console.log("This the new position: ",newPosition)
+        console.log("This the new position: ", newPosition)
         console.log(i, j, state.selectedSquare)
         if (this.team == 'white') {
             if (i + 1 == newI && j == newJ) return true
             if (i + 2 == newI && j == newJ && i == 1) return true
-            if (i + 1 == newI && (j -1  == newJ || j + 1 == newJ)){
+            if (i + 1 == newI && (j - 1 == newJ || j + 1 == newJ)) {
                 console.log("White attacking black")
-                if(newPosition){
-                    
-                    if(newPosition.team == 'black'){
+                if (newPosition) {
+
+                    if (newPosition.team == 'black') {
                         console.log("HIT ATTACK BLACK")
-                        movePiece(newI,newJ)
+                        movePiece(newI, newJ)
                     }
                 }
             }
@@ -81,12 +80,12 @@ class Pawn extends Piece {
             if (i - 1 == newI && j == newJ) return true
             // console.log()
             if (i - 2 == newI && j == newJ && i == 6) return true
-            if (i - 1 == newI && (j -1  == newJ || j + 1 == newJ)){
+            if (i - 1 == newI && (j - 1 == newJ || j + 1 == newJ)) {
                 console.log("Black attacking white")
-                if(newPosition){
-                    if(newPosition.team == 'white'){
+                if (newPosition) {
+                    if (newPosition.team == 'white') {
                         console.log("HIT ATTACK WHITE")
-                        movePiece(newI,newJ)
+                        movePiece(newI, newJ)
                     }
                 }
             }
@@ -103,7 +102,33 @@ class Knight extends Piece {
         this.icon = icon
     }
     checkMove() {
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        let newI = Number(state.selectedSquare[0])
+        let newJ = Number(state.selectedSquare[1])
+        let newPosition = board[newI][newJ]
+        console.log("This the new position: ", newPosition)
+        console.log(i, j, state.selectedSquare)
 
+        if (i + 1 == newI) {
+            if (j - 2 == newJ || j + 2 == newJ) return true
+        } else if (i + 2 == newI) {
+            if (j - 1 == newJ || j + 1 == newJ) return true
+        } if (i - 1 == newI) {
+            if (j - 2 == newJ || j + 2 == newJ) return true
+        } else if (i - 2 == newI) {
+            if (j - 1 == newJ || j + 1 == newJ) return true
+        } else {
+            return false
+        }
+
+
+        if (newPosition == null) return true
+        else if (newPosition.team != this.team) {
+            console.log("HIT OPPONENT : ", state.movingPiece)
+
+            return true
+        }
     }
 }
 
@@ -227,15 +252,15 @@ function init() {
 
 function movePiece(i, j) {
     console.log("Top of movePiece: ", state.movingPiece, state.selectedSquare, i, j)
-        board[i][j] = state.movingPiece
-        let oldI = state.movingPiece.pos.split('')[1]
-        let oldJ = state.movingPiece.pos.split('')[3]
-        state.movingPiece.pos = `r${i}c${j}`
-        state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
-        board[oldI][oldJ] = null
-        state.movingPiece = null
-        state.selectedSquare = null
-        state.turn *= -1
+    board[i][j] = state.movingPiece
+    let oldI = state.movingPiece.pos.split('')[1]
+    let oldJ = state.movingPiece.pos.split('')[3]
+    state.movingPiece.pos = `r${i}c${j}`
+    state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
+    board[oldI][oldJ] = null
+    state.movingPiece = null
+    state.selectedSquare = null
+    state.turn *= -1
     console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
 }
 
