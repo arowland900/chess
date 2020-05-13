@@ -444,7 +444,20 @@ function init() {
 }
 
 function checkForCheck(b) {
-    // b is what the potential new board is, if accepted, state.board becomes b
+    // b is what   the potential new board is, if accepted, state.board becomes b
+    let wKingLoc;
+    let bKingLoc;
+    // LOCATE KINGS
+    b.forEach((e, i) => {
+        e.forEach((sq, j) => {
+            if(sq instanceof King && sq.team == 'white') wKingLoc = [i,j]
+            if(sq instanceof King && sq.team == 'black') bKingLoc = [i,j]
+        })
+    })
+
+    console.log("WHITE KING LOC: ",wKingLoc)
+    console.log("BLACK KING LOC: ",bKingLoc)
+
     // if rejected, state.board becomes oldBoard (movePiece function)
     // check the newly created board in movePiece
     // if so, make that player's team checked (state.whiteCheck = true || state.blackCheck = true)
@@ -456,10 +469,7 @@ function checkForCheck(b) {
 
 function movePiece(i, j) {
     // new check logic below
-    // let oldBoard = state.board
-    // checkForCheck(oldBoard){
-    //     if(state.players[state.turn] == 'white' && )
-    // }
+    let oldBoard = board
     // IT DOESNT MATTER IF YOU START IN CHECK, ONLY MATTERS IF YOU CAN GET OUT!
     // new check logic above
     console.log("Top of movePiece: ", state.movingPiece, state.selectedSquare, i, j)
@@ -472,7 +482,7 @@ function movePiece(i, j) {
     state.movingPiece = null
     state.selectedSquare = null
     // new check logic below
-    // checkForCheck(state.board)
+    checkForCheck(board)
     // if (state.players[state.turn] == 'white' && state.whiteCheck) {
     //     state.board = oldBoard
     // } else if(state.players[state.turn] == 'black' && state.blackCheck){
