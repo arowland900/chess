@@ -116,13 +116,45 @@ class Knight extends Piece {
         console.log(i, j, state.selectedSquare)
 
         if (i + 1 == newI) {
-            if (j - 2 == newJ || j + 2 == newJ) return true
+            if (j - 2 == newJ || j + 2 == newJ) {
+                if (newPosition == null) return true
+                else if (newPosition.team != this.team) {
+                    console.log("HIT OPPONENT : ", state.movingPiece)
+
+                    return true
+                }
+            }
+            else return false
         } else if (i + 2 == newI) {
-            if (j - 1 == newJ || j + 1 == newJ) return true
-        } if (i - 1 == newI) {
-            if (j - 2 == newJ || j + 2 == newJ) return true
+            if (j - 1 == newJ || j + 1 == newJ) {
+                if (newPosition == null) return true
+                else if (newPosition.team != this.team) {
+                    console.log("HIT OPPONENT : ", state.movingPiece)
+
+                    return true
+                }
+            }
+            else return false
+        } else if (i - 1 == newI) {
+            if (j - 2 == newJ || j + 2 == newJ) {
+                if (newPosition == null) return true
+                else if (newPosition.team != this.team) {
+                    console.log("HIT OPPONENT : ", state.movingPiece)
+
+                    return true
+                }
+            }
+            else return false
         } else if (i - 2 == newI) {
-            if (j - 1 == newJ || j + 1 == newJ) return true
+            if (j - 1 == newJ || j + 1 == newJ) {
+                if (newPosition == null) return true
+                else if (newPosition.team != this.team) {
+                    console.log("HIT OPPONENT : ", state.movingPiece)
+
+                    return true
+                }
+            }
+            else return false
         } else {
             return false
         }
@@ -414,7 +446,7 @@ function checkForCheck(b) {
 
 function movePiece(i, j) {
     // new check logic below
-    let oldBoard = state.board
+    // let oldBoard = state.board
     // checkForCheck(oldBoard){
     //     if(state.players[state.turn] == 'white' && )
     // }
@@ -430,19 +462,19 @@ function movePiece(i, j) {
     state.movingPiece = null
     state.selectedSquare = null
     // new check logic below
-    checkForCheck(state.board)
-    if (state.players[state.turn] == 'white' && state.whiteCheck) {
-        state.board = oldBoard
-    } else if(state.players[state.turn] == 'black' && state.blackCheck){
-        state.board = oldBoard
-    } else {
-        // state.movingPiece.pos = `r${i}c${j}`
-        // state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
-        // board[oldI][oldJ] = null
-        // state.movingPiece = null
-        // state.selectedSquare = null
-        state.turn *= -1
-    }
+    // checkForCheck(state.board)
+    // if (state.players[state.turn] == 'white' && state.whiteCheck) {
+    //     state.board = oldBoard
+    // } else if(state.players[state.turn] == 'black' && state.blackCheck){
+    //     state.board = oldBoard
+    // } else {
+    // state.movingPiece.pos = `r${i}c${j}`
+    // state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
+    // board[oldI][oldJ] = null
+    // state.movingPiece = null
+    // state.selectedSquare = null
+    state.turn *= -1
+    // }
     // new check logic above
     console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
 }
