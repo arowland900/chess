@@ -61,16 +61,12 @@ class Pawn extends Piece {
         let j = Number(this.pos.split('')[3])
         console.log(i, j, state.selectedSquare)
         if (this.team == 'white') {
-            // return true
-            if(i + 1 == state.selectedSquare[0] && j == state.selectedSquare[1]){
-                return true
-            }
+            if(i + 1 == state.selectedSquare[0] && j == state.selectedSquare[1]) return true
+            if(i + 2 == state.selectedSquare[0] && j == state.selectedSquare[1] && i == 1) return true
 
         } else {
-            // return true
-            if(i - 1 == state.selectedSquare[0] && j == state.selectedSquare[1]){
-                return true
-            }
+            if(i - 1 == state.selectedSquare[0] && j == state.selectedSquare[1]) return true
+            if(i - 2 == state.selectedSquare[0] && j == state.selectedSquare[1] && j == 1) return true
         }
     }
 }
