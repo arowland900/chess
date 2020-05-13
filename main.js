@@ -66,7 +66,8 @@ class Pawn extends Piece {
 
         } else {
             if(i - 1 == state.selectedSquare[0] && j == state.selectedSquare[1]) return true
-            if(i - 2 == state.selectedSquare[0] && j == state.selectedSquare[1] && j == 1) return true
+            // console.log()
+            if(i - 2 == state.selectedSquare[0] && j == state.selectedSquare[1] && i == 6) return true
         }
     }
 }
