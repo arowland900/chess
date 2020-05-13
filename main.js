@@ -59,15 +59,37 @@ class Pawn extends Piece {
         // console.log("HITTING")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
+        let newI = Number(state.selectedSquare[0])
+        let newJ = Number(state.selectedSquare[1])
+        let newPosition = board[newI][newJ]
+        console.log("This the new position: ",newPosition)
         console.log(i, j, state.selectedSquare)
         if (this.team == 'white') {
-            if (i + 1 == state.selectedSquare[0] && j == state.selectedSquare[1]) return true
-            if (i + 2 == state.selectedSquare[0] && j == state.selectedSquare[1] && i == 1) return true
-
+            if (i + 1 == newI && j == newJ) return true
+            if (i + 2 == newI && j == newJ && i == 1) return true
+            if (i + 1 == newI && (j -1  == newJ || j + 1 == newJ)){
+                console.log("White attacking black")
+                if(newPosition){
+                    
+                    if(newPosition.team == 'black'){
+                        console.log("HIT ATTACK BLACK")
+                        movePiece(newI,newJ)
+                    }
+                }
+            }
         } else {
-            if (i - 1 == state.selectedSquare[0] && j == state.selectedSquare[1]) return true
+            if (i - 1 == newI && j == newJ) return true
             // console.log()
-            if (i - 2 == state.selectedSquare[0] && j == state.selectedSquare[1] && i == 6) return true
+            if (i - 2 == newI && j == newJ && i == 6) return true
+            if (i - 1 == newI && (j -1  == newJ || j + 1 == newJ)){
+                console.log("Black attacking white")
+                if(newPosition){
+                    if(newPosition.team == 'white'){
+                        console.log("HIT ATTACK WHITE")
+                        movePiece(newI,newJ)
+                    }
+                }
+            }
         }
     }
 }
@@ -132,7 +154,12 @@ class Rook extends Piece {
             }
         }
         if (selectedValue == null) return true
-        else if (selectedValue.team != this.team) return true
+        else if (selectedValue.team != this.team) {
+            console.log("HIT OPPONENT : ", state.movingPiece)
+
+            return true
+        }
+
     }
 }
 
@@ -198,12 +225,27 @@ function init() {
     renderBoard()
 }
 
+function movePiece(i, j) {
+    console.log("Top of movePiece: ", state.movingPiece, state.selectedSquare, i, j)
+        board[i][j] = state.movingPiece
+        let oldI = state.movingPiece.pos.split('')[1]
+        let oldJ = state.movingPiece.pos.split('')[3]
+        state.movingPiece.pos = `r${i}c${j}`
+        state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
+        board[oldI][oldJ] = null
+        state.movingPiece = null
+        state.selectedSquare = null
+        state.turn *= -1
+    console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
+}
+
 function handleClick(e) {
     // grab indices of selected piece
     let i = Number(e.target.id.split('')[1])
     let j = Number(e.target.id.split('')[3])
     // check to see if the space selected has a piece
     let attemptedSelect = board[i][j]
+    state.selectedSquare = [i, j]
     // if so, check to see if it is the proper player's turn
     if (attemptedSelect) {
         if (attemptedSelect.canMove()) {
@@ -213,26 +255,24 @@ function handleClick(e) {
 
             console.log("THIS IS THE SELECTED PIECE", state.movingPiece)
         } else {
-            console.log("Not your turn :(", attemptedSelect)
-            return
+            console.log("STATE MOVING PIECE :", state.movingPiece)
+            if (state.movingPiece && state.movingPiece.checkMove()) {
+                // if()
+                console.log("HITTING IF STATEMENT FOR ATTACK")
+                movePiece(i, j)
+            } else {
+
+                console.log("Not your turn :(", attemptedSelect, state.movingPiece)
+            }
         }
     } else {
 
         console.log(attemptedSelect)
         if (state.movingPiece && !attemptedSelect) {
-            state.selectedSquare = [i, j]
+            // state.selectedSquare = [i, j]
             if (state.movingPiece.checkMove()) {
-                board[i][j] = state.movingPiece
-                let oldI = state.movingPiece.pos.split('')[1]
-                let oldJ = state.movingPiece.pos.split('')[3]
-                state.movingPiece.pos = `r${i}c${j}`
-                state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
-                board[oldI][oldJ] = null
-                state.movingPiece = null
-                state.selectedSquare = null
-                state.turn *= -1
+                movePiece(i, j)
             } else {
-
                 console.log("Invalid move, please try again!")
             }
         }
