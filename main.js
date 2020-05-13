@@ -401,15 +401,25 @@ function init() {
     renderBoard()
 }
 
-function checkForCheck() {
-    // before letting a piece move, determine if move puts own king in check.
-    // if so, move is invalid
+function checkForCheck(b) {
+    // b is what the potential new board is, if accepted, state.board becomes b
+    // if rejected, state.board becomes oldBoard (movePiece function)
+    // check the newly created board in movePiece
+    // if so, make that player's team checked (state.whiteCheck = true || state.blackCheck = true)
+
 
     // after moving a piece, determine if opposing team is now in check
 
 }
 
 function movePiece(i, j) {
+    // new check logic below
+    let oldBoard = state.board
+    // checkForCheck(oldBoard){
+    //     if(state.players[state.turn] == 'white' && )
+    // }
+    // IT DOESNT MATTER IF YOU START IN CHECK, ONLY MATTERS IF YOU CAN GET OUT!
+    // new check logic above
     console.log("Top of movePiece: ", state.movingPiece, state.selectedSquare, i, j)
     board[i][j] = state.movingPiece
     let oldI = state.movingPiece.pos.split('')[1]
@@ -419,7 +429,21 @@ function movePiece(i, j) {
     board[oldI][oldJ] = null
     state.movingPiece = null
     state.selectedSquare = null
-    state.turn *= -1
+    // new check logic below
+    checkForCheck(state.board)
+    if (state.players[state.turn] == 'white' && state.whiteCheck) {
+        state.board = oldBoard
+    } else if(state.players[state.turn] == 'black' && state.blackCheck){
+        state.board = oldBoard
+    } else {
+        // state.movingPiece.pos = `r${i}c${j}`
+        // state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
+        // board[oldI][oldJ] = null
+        // state.movingPiece = null
+        // state.selectedSquare = null
+        state.turn *= -1
+    }
+    // new check logic above
     console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
 }
 
