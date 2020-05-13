@@ -18,7 +18,9 @@ let state = {
     board: null,
     turn: 1,
     movingPiece: null,
-    selectedSquare: null
+    selectedSquare: null,
+    whiteCheck: false,
+    blackCheck: false
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
@@ -393,6 +395,13 @@ init()
 function init() {
 
     renderBoard()
+}
+
+function checkForCheck(){
+    // before letting a piece move, determine if move puts own king in check.
+    // if so, move is invalid
+
+    // after moving a piece, determine if opposing team is now in check
 }
 
 function movePiece(i, j) {
