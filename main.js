@@ -141,6 +141,27 @@ class Bishop extends Piece {
         this.icon = icon
     }
     checkMove() {
+        console.log("HITTING")
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        let desiredI = state.selectedSquare[0]
+        let desiredJ = state.selectedSquare[1]
+        let selectedValue = board[desiredI][desiredJ]
+        if (i == desiredI || j == desiredJ) {
+            return false
+        } else if (Math.abs(j - desiredJ) !== Math.abs(i - desiredI)) {
+            return false
+        } else {
+            // for(let startI = i, startJ = j; startI < ){
+
+            // }
+        }
+        if (selectedValue == null) return true
+        else if (selectedValue.team != this.team) {
+            console.log("HIT OPPONENT : ", state.movingPiece)
+
+            return true
+        }
 
     }
 }
@@ -163,18 +184,37 @@ class Rook extends Piece {
         if (i !== desiredI && j !== desiredJ) {
             return false
         } else if (i == desiredI && j !== desiredJ) {
-            for (let start = j + 1; start < desiredJ; start++) {
-                console.log("HITTING", board[i][start])
-                if (board[i][start] !== null) {
-                    return false
+            if (j > desiredJ) {
+
+                for (let start = j + 1; start < desiredJ; start++) {
+                    console.log("HITTING", board[i][start])
+                    if (board[i][start] !== null) {
+                        return false
+                    }
+                }
+            } else {
+                for (let start = j - 1; start > desiredJ; start--) {
+                    console.log("HITTING", board[i][start])
+                    if (board[i][start] !== null) {
+                        return false
+                    }
                 }
             }
 
         } else if (j == desiredJ && i !== desiredI) {
-            for (let start = i + 1; start < desiredI; start++) {
-                console.log("HITTING", board[start][j])
-                if (board[start][j] !== null) {
-                    return false
+            if (i > desiredI) {
+                for (let start = i - 1; start > desiredI; start--) {
+                    console.log("HITTING", board[start][j])
+                    if (board[start][j] !== null) {
+                        return false
+                    }
+                }
+            } else {
+                for (let start = i + 1; start < desiredI; start++) {
+                    console.log("HITTING", board[start][j])
+                    if (board[start][j] !== null) {
+                        return false
+                    }
                 }
             }
         }
