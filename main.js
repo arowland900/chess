@@ -1,168 +1,202 @@
 console.log("JS LOADED")
 
 /*----- constants -----*/
-let pieceIcons = {
-    wP: '♙',
-    wKn: '♘',
-    wB: '♗',
-    wR: '♖',
-    wQ: '♕',
-    wK: '♔',
-    bP: '♟',
-    bKn: '♞',
-    bB: '♝',
-    bR: '♜',
-    bQ: '♛',
-    bK: '♚'
-}
-let players = {
-    '1': 'w',
-    '-1': 'b'
+const icons = {
+    Pawn: '♟',
+    Knight: '♞',
+    Bishop: '♝',
+    Rook: '♜',
+    Queen: '♛',
+    King: '♚'
 }
 
-/*----- app's state (variables) -----*/
-let board;
-let turn;
-let movingPiece = null
-let piece = null
-/*----- cached element references -----*/
+const players = {
+    '1': 'white',
+    '-1': 'black'
+}
+/*----- state -----*/
+let state = {
+    board: null,
+    turn: 1,
+    movingPiece: null,
+    selectedSquare: null
+}
+/*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
-let reset = document.querySelector('button')
+/*----- event Listeners -----*/
+gameBoard.addEventListener('click', handleClick)
+/*----- classes -----*/
 
-/*----- event listeners -----*/
-gameBoard.addEventListener('click', handleClick);
-reset.addEventListener('click', init);
+
+class Piece {
+    constructor(team, pos, prev, icon) {
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    canMove() {
+        if (players[state.turn] == this.team) return true
+        return false
+    }
+    selected() {
+        state.movingPiece = this
+    }
+}
+
+class Pawn extends Piece {
+    constructor(team, pos, prev, icon) {
+        super(team, pos, prev, icon)
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    checkMove() {
+
+    }
+}
+
+class Knight extends Piece {
+    constructor(team, pos, prev, icon) {
+        super(team, pos, prev, icon)
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    checkMove() {
+
+    }
+}
+
+class Bishop extends Piece {
+    constructor(team, pos, prev, icon) {
+        super(team, pos, prev, icon)
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    checkMove() {
+
+    }
+}
+
+class Rook extends Piece {
+    constructor(team, pos, prev, icon) {
+        super(team, pos, prev, icon)
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    checkMove() {
+
+    }
+}
+
+class Queen extends Piece {
+    constructor(team, pos, prev, icon) {
+        super(team, pos, prev, icon)
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    checkMove() {
+
+    }
+}
+
+class King extends Piece {
+    constructor(team, pos, prev, icon) {
+        super(team, pos, prev, icon)
+        this.team = team
+        this.pos = pos
+        this.prev = prev
+        this.icon = icon
+    }
+    checkMove() {
+
+    }
+}
+
+
+
+
 /*----- functions -----*/
+let board = new Array(8).fill(new Array(8).fill(null))
 
-
+board = board.map((row, i) => {
+    return row.map((sq, j) => {
+        if (!i) {
+            if (!j || j == 7) return new Rook('white', `r${i}c${j}`, [], '♖')
+            else if (j == 1 || j == 6) return new Knight('white', `r${i}c${j}`, [], '♘')
+            else if (j == 2 || j == 5) return new Bishop('white', `r${i}c${j}`, [], '♗')
+            else if (j == 4) return new Queen('white', `r${i}c${j}`, [], '♕')
+            else return new King('white', `r${i}c${j}`, [], '♔')
+        }
+        if (i == 1) return new Pawn('white', `r${i}c${j}`, [], '♙')
+        if (i == 6) return new Pawn('black', `r${i}c${j}`, [], '♟')
+        if (i == 7) {
+            if (!j || j == 7) return new Rook('black', `r${i}c${j}`, [], '♜')
+            else if (j == 1 || j == 6) return new Knight('black', `r${i}c${j}`, [], '♞')
+            else if (j == 2 || j == 5) return new Bishop('black', `r${i}c${j}`, [], '♝')
+            else if (j == 4) return new Queen('black', `r${i}c${j}`, [], '♛')
+            else return new King('black', `r${i}c${j}`, [], '♚')
+        }
+        return sq
+    })
+})
 
 init()
 
 function init() {
-    turn = 1
-    board = [
-        ['wR', 'wKn', 'wB', 'wK', 'wQ', 'wB', 'wKn', 'wR',],
-        ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP',],
-        [null, null, null, null, null, null, null, null,],
-        [null, null, null, null, null, null, null, null,],
-        [null, null, null, null, null, null, null, null,],
-        [null, null, null, null, null, null, null, null,],
-        ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP',],
-        ['bR', 'bKn', 'bB', 'bQ', 'bK', 'bB', 'bKn', 'bR',],
-    ]
-    appendBoard()
+
+    renderBoard()
 }
 
 function handleClick(e) {
 
     let i = e.target.id.split('')[1]
     let j = e.target.id.split('')[3]
-    piece = board[i][j]
-    let desired = [i, j]
-    if (movingPiece) {
-        if (turn === 1 && movingPiece[0].split('')[0] != 'w') {
-            console.log(movingPiece[0].split('')[0])
-            movingPiece = null
-            piece = null
-            return
-        }
-        if (turn === -1 && movingPiece[0].split('')[0] != 'b') {
-            console.log("LATERHIT")
-            movingPiece = null
-            piece = null
-            return
-        }
-    }
 
-    console.log("PIECE: ", piece)
-    if (piece && movingPiece == null) {
-        movingPiece = [piece, i, j]
-    } else if (movingPiece) {
-        console.log(movingPiece, desired)
-        if (checkValidMove(movingPiece, desired)) {
-            board[i][j] = movingPiece[0]
-            board[movingPiece[1]][movingPiece[2]] = null
-            movingPiece = null
-            appendBoard()
-            turn *= -1
+    let attemptedSelect = board[i][j]
+    if (attemptedSelect) {
+        if (attemptedSelect.canMove()) {
+            console.log("Your Turn :)")
+            attemptedSelect.selected()
+            state.movingPiece = attemptedSelect
+
+            console.log("THIS IS THE SELECTED PIECE", state.movingPiece)
         } else {
-            movingPiece = [piece, i, j]
-            piece = null
-            console.log("Not a Valid Move")
+            console.log("Not your turn :(")
             return
         }
-    } else {
-        console.log('no piece to move')
-        return
     }
-
-
+    renderBoard()
 }
 
-function checkValidMove(moving, desired) {
-    // black pawn logic
-    if (moving[0] === 'bP') {
-        if (board[desired[0]][desired[1]] === null) {
-            if (moving[1] - 1 == desired[0] && moving[2] == desired[1]) {
-                // console.log("WE'VE GOT A VALID MOVE!")
-                return true
-            } else if (moving[1] == 6 && desired[0] == 4 && moving[2] == desired[1]) {
-                return true
-            }
-
-        } else {
-            if (board[desired[0]][desired[1]].split('')[0] == 'b') {
-                // console.log("same team, invalid move!")
-                return false
-            }
-            if (board[desired[0]][desired[1]].split('')[0] == 'w') {
-                // console.log("Opponent")
-                if (moving[1] - 1 == desired[0] && (moving[2] - 1 == desired[1] || moving[2] + 1 == desired[1])) {
-                    // console.log("CAPTURED!")
-                    return true
-                }
-            }
-        }
-    }
-    // white pawn logic
-    if (moving[0] === 'wP') {
-        if (board[desired[0]][desired[1]] === null) {
-            if (Number(moving[1]) + 1 == desired[0] && moving[2] == desired[1]) {
-                // console.log("WE'VE GOT A VALID MOVE!")
-                return true
-            } else if (moving[1] == 1 && desired[0] == 3 && moving[2] == desired[1]) {
-                return true
-            }
-
-        } else {
-            if (board[desired[0]][desired[1]].split('')[0] == 'w') {
-                // console.log("same team, invalid move!")
-                return false
-            }
-            if (board[desired[0]][desired[1]].split('')[0] == 'b') {
-
-                // console.log("Opponent")
-                if (Number(moving[1]) + 1 == desired[0] && (moving[2] - 1 == desired[1] || Number(moving[2]) + 1 == desired[1])) {
-                    // console.log("CAPTURED!")
-                    return true
-                }
-            }
-        }
-    }
-}
-
-
-function appendBoard() {
+function renderBoard() {
     gameBoard.textContent = ''
     board.forEach((e, i) => {
         e.forEach((f, j) => {
+            f ? console.log(f) : []
             let square = document.createElement('div')
-            square.setAttribute('id', `c${i}r${j}`)
+            square.setAttribute('id', `r${i}c${j}`)
             square.setAttribute('class', 'square')
             let x = (j + i) % 2
             x ? square.style.backgroundColor = 'brown'
                 : square.style.backgroundColor = 'beige'
-            square.textContent = pieceIcons[f]
+            square.textContent = f ? f.icon : ''
+            if(state.movingPiece){
+                let idx = state.movingPiece.pos.split('')[1]
+                let jdx = state.movingPiece.pos.split('')[3]
+                if(i == idx && j == jdx){
+                    square.style.backgroundColor = 'orange'
+                }
+            }
             gameBoard.appendChild(square)
         })
     })
