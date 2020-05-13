@@ -9,7 +9,6 @@ const icons = {
     Queen: '♛',
     King: '♚'
 }
-
 const players = {
     '1': 'white',
     '-1': 'black'
@@ -126,6 +125,7 @@ class King extends Piece {
 
 
 /*----- functions -----*/
+// initialize board and fill it with pieces at starting position
 let board = new Array(8).fill(new Array(8).fill(null))
 
 board = board.map((row, i) => {
@@ -158,11 +158,12 @@ function init() {
 }
 
 function handleClick(e) {
-
+    // grab indices of selected piece
     let i = e.target.id.split('')[1]
     let j = e.target.id.split('')[3]
-
+    // check to see if the space selected has a piece
     let attemptedSelect = board[i][j]
+    // if so, check to see if it is the proper player's turn
     if (attemptedSelect) {
         if (attemptedSelect.canMove()) {
             console.log("Your Turn :)")
@@ -171,8 +172,20 @@ function handleClick(e) {
 
             console.log("THIS IS THE SELECTED PIECE", state.movingPiece)
         } else {
-            console.log("Not your turn :(")
+            console.log("Not your turn :(", attemptedSelect)
             return
+        }
+    } else {
+        console.log(attemptedSelect)
+        if(state.movingPiece && !attemptedSelect){
+            board[i][j] = state.movingPiece
+            let oldI = state.movingPiece.pos.split('')[1]
+            let oldJ = state.movingPiece.pos.split('')[3]
+            state.movingPiece.pos = `r${i}c${j}`
+
+            board[oldI][oldJ] = null
+            state.movingPiece = null
+            state.turn *= -1
         }
     }
     renderBoard()
@@ -182,7 +195,7 @@ function renderBoard() {
     gameBoard.textContent = ''
     board.forEach((e, i) => {
         e.forEach((f, j) => {
-            f ? console.log(f) : []
+            // f ? console.log(f) : []
             let square = document.createElement('div')
             square.setAttribute('id', `r${i}c${j}`)
             square.setAttribute('class', 'square')
