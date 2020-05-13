@@ -22,8 +22,12 @@ let state = {
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
+// let flipBoard = document.getElementById('flipBoard')
+let reset = document.getElementById('reset')
 /*----- event Listeners -----*/
 gameBoard.addEventListener('click', handleClick)
+// flipBoard.addEventListener('click', flip)
+reset.addEventListener('click', init)
 /*----- classes -----*/
 
 
@@ -52,7 +56,22 @@ class Pawn extends Piece {
         this.icon = icon
     }
     checkMove() {
+        console.log("HITTING")
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        console.log(i, j, state.selectedSquare)
+        if (this.team == 'white') {
+            // return true
+            if(i + 1 == state.selectedSquare[0] && j == state.selectedSquare[1]){
+                return true
+            }
 
+        } else {
+            // return true
+            if(i - 1 == state.selectedSquare[0] && j == state.selectedSquare[1]){
+                return true
+            }
+        }
     }
 }
 
@@ -159,8 +178,8 @@ function init() {
 
 function handleClick(e) {
     // grab indices of selected piece
-    let i = e.target.id.split('')[1]
-    let j = e.target.id.split('')[3]
+    let i = Number(e.target.id.split('')[1])
+    let j = Number(e.target.id.split('')[3])
     // check to see if the space selected has a piece
     let attemptedSelect = board[i][j]
     // if so, check to see if it is the proper player's turn
@@ -176,16 +195,24 @@ function handleClick(e) {
             return
         }
     } else {
-        console.log(attemptedSelect)
-        if(state.movingPiece && !attemptedSelect){
-            board[i][j] = state.movingPiece
-            let oldI = state.movingPiece.pos.split('')[1]
-            let oldJ = state.movingPiece.pos.split('')[3]
-            state.movingPiece.pos = `r${i}c${j}`
 
-            board[oldI][oldJ] = null
-            state.movingPiece = null
-            state.turn *= -1
+        console.log(attemptedSelect)
+        if (state.movingPiece && !attemptedSelect) {
+            state.selectedSquare = [i,j]
+            if (state.movingPiece.checkMove()) {
+                board[i][j] = state.movingPiece
+                let oldI = state.movingPiece.pos.split('')[1]
+                let oldJ = state.movingPiece.pos.split('')[3]
+                state.movingPiece.pos = `r${i}c${j}`
+                state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
+                board[oldI][oldJ] = null
+                state.movingPiece = null
+                state.selectedSquare = null
+                state.turn *= -1
+            } else {
+
+                console.log("Invalid move, please try again!")
+            }
         }
     }
     renderBoard()
@@ -203,10 +230,10 @@ function renderBoard() {
             x ? square.style.backgroundColor = 'brown'
                 : square.style.backgroundColor = 'beige'
             square.textContent = f ? f.icon : ''
-            if(state.movingPiece){
+            if (state.movingPiece) {
                 let idx = state.movingPiece.pos.split('')[1]
                 let jdx = state.movingPiece.pos.split('')[3]
-                if(i == idx && j == jdx){
+                if (i == idx && j == jdx) {
                     square.style.backgroundColor = 'orange'
                 }
             }
