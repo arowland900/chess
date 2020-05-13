@@ -69,8 +69,13 @@ class Pawn extends Piece {
         console.log("This the new position: ", newPosition)
         console.log(i, j, state.selectedSquare)
         if (this.team == 'white') {
-            if (i + 1 == newI && j == newJ) return true
-            if (i + 2 == newI && j == newJ && i == 1) return true
+            if (i + 1 == newI && j == newJ && newPosition == null) return true
+            if (i + 2 == newI && j == newJ && i == 1 && newPosition == null) {
+                let skippedPosition = board[i+1][j]
+                if (skippedPosition == null) {
+                    return true
+                }
+            }
             if (i + 1 == newI && (j - 1 == newJ || j + 1 == newJ)) {
                 console.log("White attacking black")
                 if (newPosition) {
@@ -82,9 +87,14 @@ class Pawn extends Piece {
                 }
             }
         } else {
-            if (i - 1 == newI && j == newJ) return true
+            if (i - 1 == newI && j == newJ && newPosition == null) return true
             // console.log()
-            if (i - 2 == newI && j == newJ && i == 6) return true
+            if (i - 2 == newI && j == newJ && i == 6 && newPosition == null) {
+                let skippedPosition = board[i-1][j]
+                if (skippedPosition == null) {
+                    return true
+                }
+            }
             if (i - 1 == newI && (j - 1 == newJ || j + 1 == newJ)) {
                 console.log("Black attacking white")
                 if (newPosition) {
