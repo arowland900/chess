@@ -20,7 +20,8 @@ let state = {
     movingPiece: null,
     selectedSquare: null,
     whiteCheck: false,
-    blackCheck: false
+    blackCheck: false,
+    allPossibleMoves: []
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
@@ -690,6 +691,10 @@ class King extends Piece {
         this.prev = prev
         this.icon = icon
     }
+    allMoves(){
+        this.moves = []
+        console.log("NO KING LOGIC YET")
+    }
     checkMove() {
         console.log("HITTING KING")
         let i = Number(this.pos.split('')[1])
@@ -879,8 +884,22 @@ function handleClick(e) {
             state.movingPiece = attemptedSelect
             // CHECK ROOK MOVES
             if (state.movingPiece) {
+                state.allPossibleMoves = []
                 console.log("HITTING ROOK ALL MOVES")
-                state.movingPiece.allMoves()
+                board.forEach((r, i) => {
+                    r.forEach((sq, j) => {
+                        if(sq){
+                            console.log("SQ: ", sq)
+                            sq.allMoves()
+                            // sq.moves.forEach(m => {
+                                state.allPossibleMoves.push({piece: sq, moves: sq.moves})
+                            // })
+                        }
+                    })
+                })
+                // console.log(state.movingPiece)
+                // state.movingPiece.allMoves()
+                console.log(state.allPossibleMoves)
             }
             // CHECK ROOK MOVES
             console.log("THIS IS THE SELECTED PIECE", state.movingPiece)
