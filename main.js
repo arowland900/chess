@@ -187,6 +187,62 @@ class Bishop extends Piece {
         this.prev = prev
         this.icon = icon
     }
+    allMoves() {
+        this.moves = []
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        // UP LEFT CHECK 
+        let upLeftI = i - 1
+        let upLeftJ = j - 1
+        let upRightI = i - 1
+        let upRightJ = j + 1
+        let downLeftI = i + 1
+        let downLeftJ = j - 1
+        let downRightI = i + 1
+        let downRightJ = j + 1
+
+        // UP LEFT LOGIC
+        while(upLeftI >= 0){
+            let el = board[upLeftI][upLeftJ]
+            this.moves.push({ spot: [upLeftI, upLeftJ], piece: el })
+            if (el != null) {
+                break
+            }
+            upLeftI--
+            upLeftJ--
+        }
+        // UP RIGHT LOGIC
+        while(upRightI >= 0){
+            let el = board[upRightI][upRightJ]
+            this.moves.push({ spot: [upRightI, upRightJ], piece: el })
+            if (el != null) {
+                break
+            }
+            upRightI--
+            upRightJ++
+        }
+        // DOWN LEFT LOGIC
+        while(downLeftI <= 7){
+            let el = board[downLeftI][downLeftJ]
+            this.moves.push({ spot: [downLeftI, downLeftJ], piece: el })
+            if (el != null) {
+                break
+            }
+            downLeftI++
+            downLeftJ--
+        }
+        // DOWN RIGHT LOGIC
+        while(downRightI <= 7){
+            let el = board[downRightI][downRightJ]
+            this.moves.push({ spot: [downRightI, downRightJ], piece: el })
+            if (el != null) {
+                break
+            }
+            downRightI++
+            downRightJ++
+        }
+        console.log("BISHOP MOVES: ", this.moves)
+    }
     checkMove() {
         console.log("HITTING")
         let i = Number(this.pos.split('')[1])
@@ -673,7 +729,7 @@ function handleClick(e) {
             attemptedSelect.selected()
             state.movingPiece = attemptedSelect
             // CHECK ROOK MOVES
-            if (state.movingPiece instanceof Rook || state.movingPiece instanceof Queen ) {
+            if (state.movingPiece instanceof Rook || state.movingPiece instanceof Queen || state.movingPiece instanceof Bishop) {
                 console.log("HITTING ROOK ALL MOVES")
                 state.movingPiece.allMoves()
             }
