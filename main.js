@@ -21,7 +21,8 @@ let state = {
     selectedSquare: null,
     whiteCheck: [],
     blackCheck: [],
-    allPossibleMoves: []
+    allPossibleMoves: [],
+    tempBoard: null
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
@@ -69,41 +70,41 @@ class Pawn extends Piece {
 
         if (this.team == 'white') {
             if (board[i + 1][j] == null) {
-                console.log("one space down pawn")
+                // console.log("one space down pawn")
                 this.moves.push({ spot: [i + 1, j], piece: board[i + 1][j] })
             }
             if (board[i + 1][j - 1] != null) {
-                console.log("one space down & left pawn")
+                // console.log("one space down & left pawn")
                 this.moves.push({ spot: [i + 1, j - 1], piece: board[i + 1][j - 1] })
             }
             if (board[i + 1][j + 1] != null) {
-                console.log("one space down & right pawn")
+                // console.log("one space down & right pawn")
                 this.moves.push({ spot: [i + 1, j + 1], piece: board[i + 1][j + 1] })
             }
             if (i == 1 && board[i + 2][j] == null) {
-                console.log("two space down pawn")
+                // console.log("two space down pawn")
                 this.moves.push({ spot: [i + 2, j], piece: board[i + 2][j] })
             }
         } else {
             if (board[i - 1][j] == null) {
-                console.log("one space up pawn")
+                // console.log("one space up pawn")
                 this.moves.push({ spot: [i - 1, j], piece: board[i - 1][j] })
             }
             if (board[i - 1][j - 1] != null) {
-                console.log("one space up & left pawn")
+                // console.log("one space up & left pawn")
                 this.moves.push({ spot: [i - 1, j - 1], piece: board[i - 1][j - 1] })
             }
             if (board[i - 1][j + 1] != null) {
-                console.log("one space up & right pawn")
+                // console.log("one space up & right pawn")
                 this.moves.push({ spot: [i - 1, j + 1], piece: board[i - 1][j + 1] })
             }
             if (i == 1 && board[i - 2][j] == null) {
-                console.log("two space up pawn")
+                // console.log("two space up pawn")
                 this.moves.push({ spot: [i - 2, j], piece: board[i - 2][j] })
             }
         }
 
-        console.log("ALL PAWN MOVES: ", this.moves)
+        // console.log("ALL PAWN MOVES: ", this.moves)
     }
     checkMove() {
         let i = Number(this.pos.split('')[1])
@@ -111,8 +112,8 @@ class Pawn extends Piece {
         let newI = Number(state.selectedSquare[0])
         let newJ = Number(state.selectedSquare[1])
         let newPosition = board[newI][newJ]
-        console.log("This the new position: ", newPosition)
-        console.log(i, j, state.selectedSquare)
+        // console.log("This the new position: ", newPosition)
+        // console.log(i, j, state.selectedSquare)
         if (this.team == 'white') {
             if (i + 1 == newI && j == newJ && newPosition == null) return true
             if (i + 2 == newI && j == newJ && i == 1 && newPosition == null) {
@@ -122,18 +123,18 @@ class Pawn extends Piece {
                 }
             }
             if (i + 1 == newI && (j - 1 == newJ || j + 1 == newJ)) {
-                console.log("White attacking black")
+                // console.log("White attacking black")
                 if (newPosition) {
 
                     if (newPosition.team == 'black') {
-                        console.log("HIT ATTACK BLACK")
+                        // console.log("HIT ATTACK BLACK")
                         movePiece(newI, newJ)
                     }
                 }
             }
         } else {
             if (i - 1 == newI && j == newJ && newPosition == null) return true
-            // console.log()
+            console.log()
             if (i - 2 == newI && j == newJ && i == 6 && newPosition == null) {
                 let skippedPosition = board[i - 1][j]
                 if (skippedPosition == null) {
@@ -141,10 +142,10 @@ class Pawn extends Piece {
                 }
             }
             if (i - 1 == newI && (j - 1 == newJ || j + 1 == newJ)) {
-                console.log("Black attacking white")
+                // console.log("Black attacking white")
                 if (newPosition) {
                     if (newPosition.team == 'white') {
-                        console.log("HIT ATTACK WHITE")
+                        // console.log("HIT ATTACK WHITE")
                         movePiece(newI, newJ)
                     }
                 }
@@ -208,7 +209,7 @@ class Knight extends Piece {
         if (rightDown[0] <= 7 && rightDown[1] <= 7) {
             this.moves.push({ spot: [rightDown[0], rightDown[1]], piece: board[rightDown[0]][rightDown[1]] })
         }
-        console.log("HORSE MOVES: ", this.moves)
+        // console.log("HORSE MOVES: ", this.moves)
 
 
 
@@ -220,14 +221,14 @@ class Knight extends Piece {
         let newI = Number(state.selectedSquare[0])
         let newJ = Number(state.selectedSquare[1])
         let newPosition = board[newI][newJ]
-        console.log("This the new position: ", newPosition)
-        console.log(i, j, state.selectedSquare)
+        // console.log("This the new position: ", newPosition)
+        // console.log(i, j, state.selectedSquare)
 
         if (i + 1 == newI) {
             if (j - 2 == newJ || j + 2 == newJ) {
                 if (newPosition == null) return true
                 else if (newPosition.team != this.team) {
-                    console.log("HIT OPPONENT : ", state.movingPiece)
+                    // console.log("HIT OPPONENT : ", state.movingPiece)
 
                     return true
                 }
@@ -237,7 +238,7 @@ class Knight extends Piece {
             if (j - 1 == newJ || j + 1 == newJ) {
                 if (newPosition == null) return true
                 else if (newPosition.team != this.team) {
-                    console.log("HIT OPPONENT : ", state.movingPiece)
+                    // console.log("HIT OPPONENT : ", state.movingPiece)
 
                     return true
                 }
@@ -247,7 +248,7 @@ class Knight extends Piece {
             if (j - 2 == newJ || j + 2 == newJ) {
                 if (newPosition == null) return true
                 else if (newPosition.team != this.team) {
-                    console.log("HIT OPPONENT : ", state.movingPiece)
+                    // console.log("HIT OPPONENT : ", state.movingPiece)
 
                     return true
                 }
@@ -257,7 +258,7 @@ class Knight extends Piece {
             if (j - 1 == newJ || j + 1 == newJ) {
                 if (newPosition == null) return true
                 else if (newPosition.team != this.team) {
-                    console.log("HIT OPPONENT : ", state.movingPiece)
+                    // console.log("HIT OPPONENT : ", state.movingPiece)
 
                     return true
                 }
@@ -270,7 +271,7 @@ class Knight extends Piece {
 
         if (newPosition == null) return true
         else if (newPosition.team != this.team) {
-            console.log("HIT OPPONENT : ", state.movingPiece)
+            // console.log("HIT OPPONENT : ", state.movingPiece)
 
             return true
         }
@@ -339,10 +340,10 @@ class Bishop extends Piece {
             downRightI++
             downRightJ++
         }
-        console.log("BISHOP MOVES: ", this.moves)
+        // console.log("BISHOP MOVES: ", this.moves)
     }
     checkMove() {
-        console.log("HITTING")
+        // console.log("HITTING")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
         let desiredI = state.selectedSquare[0]
@@ -373,7 +374,7 @@ class Bishop extends Piece {
         }
         if (selectedValue == null) return true
         else if (selectedValue.team != this.team) {
-            console.log("HIT OPPONENT : ", state.movingPiece)
+            // console.log("HIT OPPONENT : ", state.movingPiece)
 
             return true
         }
@@ -398,7 +399,7 @@ class Rook extends Piece {
         let rightPosJ = j + 1
         let bottomPosI = i + 1
         // HORIZONTAL
-        console.log("TOP: ", this.moves)
+        // console.log("TOP: ", this.moves)
         while (leftPosJ >= 0) {
             let el = board[i][leftPosJ]
             this.moves.push({ spot: [i, leftPosJ], piece: el })
@@ -407,7 +408,7 @@ class Rook extends Piece {
             }
             leftPosJ--
         }
-        console.log("AFTERLEFT: ", this.moves)
+        // console.log("AFTERLEFT: ", this.moves)
         while (rightPosJ <= 7) {
             let el = board[i][rightPosJ]
             this.moves.push({ spot: [i, rightPosJ], piece: el })
@@ -416,7 +417,7 @@ class Rook extends Piece {
             }
             rightPosJ++
         }
-        console.log("AFTERRIGHT: ", this.moves)
+        // console.log("AFTERRIGHT: ", this.moves)
         // VERTICAL
         while (topPosI >= 0) {
             let el = board[topPosI][j]
@@ -426,7 +427,7 @@ class Rook extends Piece {
             }
             topPosI--
         }
-        console.log("AFTER UP: ", this.moves)
+        // console.log("AFTER UP: ", this.moves)
         while (bottomPosI <= 7) {
             let el = board[bottomPosI][j]
             this.moves.push({ spot: [bottomPosI, j], piece: el })
@@ -435,11 +436,11 @@ class Rook extends Piece {
             }
             bottomPosI++
         }
-        console.log("AFTER DOWN: ", this.moves)
+        // console.log("AFTER DOWN: ", this.moves)
 
     }
     checkMove() {
-        console.log("HITTING")
+        // console.log("HITTING")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
         let desiredI = state.selectedSquare[0]
@@ -452,14 +453,14 @@ class Rook extends Piece {
             if (j < desiredJ) {
 
                 for (let start = j + 1; start < desiredJ; start++) {
-                    console.log("HITTING", board[i][start])
+                    // console.log("HITTING", board[i][start])
                     if (board[i][start] !== null) {
                         return false
                     }
                 }
             } else {
                 for (let start = j - 1; start > desiredJ; start--) {
-                    console.log("HITTING", board[i][start])
+                    // console.log("HITTING", board[i][start])
                     if (board[i][start] !== null) {
                         return false
                     }
@@ -469,14 +470,14 @@ class Rook extends Piece {
         } else if (j == desiredJ && i !== desiredI) {
             if (i > desiredI) {
                 for (let start = i - 1; start > desiredI; start--) {
-                    console.log("HITTING", board[start][j])
+                    // console.log("HITTING", board[start][j])
                     if (board[start][j] !== null) {
                         return false
                     }
                 }
             } else {
                 for (let start = i + 1; start < desiredI; start++) {
-                    console.log("HITTING", board[start][j])
+                    // console.log("HITTING", board[start][j])
                     if (board[start][j] !== null) {
                         return false
                     }
@@ -485,7 +486,7 @@ class Rook extends Piece {
         }
         if (selectedValue == null) return true
         else if (selectedValue.team != this.team) {
-            console.log("HIT OPPONENT : ", state.movingPiece)
+            // console.log("HIT OPPONENT : ", state.movingPiece)
 
             return true
         }
@@ -510,7 +511,7 @@ class Queen extends Piece {
         let rightPosJ = j + 1
         let bottomPosI = i + 1
         // HORIZONTAL
-        console.log("TOP: ", this.moves)
+        // console.log("TOP: ", this.moves)
         while (leftPosJ >= 0) {
             let el = board[i][leftPosJ]
             this.moves.push({ spot: [i, leftPosJ], piece: el })
@@ -519,7 +520,7 @@ class Queen extends Piece {
             }
             leftPosJ--
         }
-        console.log("AFTERLEFT: ", this.moves)
+        // console.log("AFTERLEFT: ", this.moves)
         while (rightPosJ <= 7) {
             let el = board[i][rightPosJ]
             this.moves.push({ spot: [i, rightPosJ], piece: el })
@@ -528,7 +529,7 @@ class Queen extends Piece {
             }
             rightPosJ++
         }
-        console.log("AFTERRIGHT: ", this.moves)
+        // console.log("AFTERRIGHT: ", this.moves)
         // VERTICAL
         while (topPosI >= 0) {
             let el = board[topPosI][j]
@@ -538,7 +539,7 @@ class Queen extends Piece {
             }
             topPosI--
         }
-        console.log("AFTER UP: ", this.moves)
+        // console.log("AFTER UP: ", this.moves)
         while (bottomPosI <= 7) {
             let el = board[bottomPosI][j]
             this.moves.push({ spot: [bottomPosI, j], piece: el })
@@ -547,7 +548,7 @@ class Queen extends Piece {
             }
             bottomPosI++
         }
-        console.log("AFTER DOWN: ", this.moves)
+        // console.log("AFTER DOWN: ", this.moves)
 
 
         // DIAGONAL
@@ -600,11 +601,11 @@ class Queen extends Piece {
             downRightI++
             downRightJ++
         }
-        console.log("BISHOP MOVES: ", this.moves)
+        // console.log("BISHOP MOVES: ", this.moves)
 
     }
     checkMove() {
-        console.log("HITTING QUEEN")
+        // console.log("HITTING QUEEN")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
         let desiredI = state.selectedSquare[0]
@@ -614,7 +615,7 @@ class Queen extends Piece {
             if (Math.abs(j - desiredJ) !== Math.abs(i - desiredI)) {
                 return false
             }
-            console.log("DIAGONAL QUEEN")
+            // console.log("DIAGONAL QUEEN")
             if (i < desiredI && j < desiredJ) {
                 for (let startI = i + 1, startJ = j + 1; startI < desiredI; startI++, startJ++) {
                     if (board[startI][startJ]) return false
@@ -629,24 +630,24 @@ class Queen extends Piece {
                 }
             } else {
                 for (let startI = i - 1, startJ = j - 1; startI > desiredI; startI--, startJ--) {
-                    console.log("HITTING DIAGONAL BACK  ")
+                    // console.log("HITTING DIAGONAL BACK  ")
                     if (board[startI][startJ]) return false
                 }
             }
         } else {
-            console.log("HELLOOOOOOOO")
+            // console.log("HELLOOOOOOOO")
             if (i == desiredI && j !== desiredJ) {
                 if (j < desiredJ) {
 
                     for (let start = j + 1; start < desiredJ; start++) {
-                        console.log("HITTING", board[i][start])
+                        // console.log("HITTING", board[i][start])
                         if (board[i][start] !== null) {
                             return false
                         }
                     }
                 } else {
                     for (let start = j - 1; start > desiredJ; start--) {
-                        console.log("HITTING", board[i][start])
+                        // console.log("HITTING", board[i][start])
                         if (board[i][start] !== null) {
                             return false
                         }
@@ -657,14 +658,14 @@ class Queen extends Piece {
                 // queen moving up & down
                 if (i > desiredI) {
                     for (let start = i - 1; start > desiredI; start--) {
-                        console.log("HITTING", board[start][j])
+                        // console.log("HITTING", board[start][j])
                         if (board[start][j] !== null) {
                             return false
                         }
                     }
                 } else {
                     for (let start = i + 1; start < desiredI; start++) {
-                        console.log("HITTING", board[start][j])
+                        // console.log("HITTING", board[start][j])
                         if (board[start][j] !== null) {
                             return false
                         }
@@ -676,7 +677,7 @@ class Queen extends Piece {
         }
         if (selectedValue == null) return true
         else if (selectedValue.team != this.team) {
-            console.log("HIT OPPONENT : ", state.movingPiece)
+            // console.log("HIT OPPONENT : ", state.movingPiece)
 
             return true
         }
@@ -694,10 +695,10 @@ class King extends Piece {
     }
     allMoves() {
         this.moves = []
-        console.log("NO KING LOGIC YET")
+        // console.log("NO KING LOGIC YET")
     }
     checkMove() {
-        console.log("HITTING KING")
+        // console.log("HITTING KING")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
         let desiredI = state.selectedSquare[0]
@@ -706,7 +707,7 @@ class King extends Piece {
         if (Math.abs(i - desiredI) > 1 || Math.abs(j - desiredJ) > 1) return false
         if (selectedValue == null) return true
         else if (selectedValue.team != this.team) {
-            console.log("HIT OPPONENT : ", state.movingPiece)
+            // console.log("HIT OPPONENT : ", state.movingPiece)
 
             return true
         }
@@ -792,7 +793,7 @@ function init() {
 //         })
 //     })
 
-//     console.log("WHITE KING LOC: ", wKingLoc)
+    // console.log("WHITE KING LOC: ", wKingLoc)
 //     console.log("BLACK KING LOC: ", bKingLoc)
 //     console.log("X & Y: ", a, b)
 
@@ -839,22 +840,112 @@ function init() {
 
 function movePiece(i, j) {
     // new check logic below
-    let oldBoard = board
+    let oldBoard = [...board]
+    let oldPiece = board[i][j]
     // IT DOESNT MATTER IF YOU START IN CHECK, ONLY MATTERS IF YOU CAN GET OUT!
     // new check logic above
     console.log("Top of movePiece: ", state.movingPiece, state.selectedSquare, i, j)
     board[i][j] = state.movingPiece
     let oldI = state.movingPiece.pos.split('')[1]
     let oldJ = state.movingPiece.pos.split('')[3]
+    // state.movingPiece.pos = `r${i}c${j}`
+    // state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
+    board[oldI][oldJ] = null
+    // state.movingPiece = null
+    // state.selectedSquare = null
+    // state.tempBoard = board
+    // }
+    // new check logic above
+    if(findEveryMove(board)){
+        if(players[state.turn] == 'white'){
+            console.log('check still here, white turn')
+            if(state.whiteCheck.length){
+                console.log("INVALID MOVE")
+                msg.textContent = "Invalid Move"
+                // board = oldBoard
+                board[oldI][oldJ] = state.movingPiece
+                board[i][j] = oldPiece
+                debugger
+                return
+            }
+        } 
+        if(players[state.turn] == 'black'){
+            console.log('check still here, black turn')
+            if(state.blackCheck.length){
+                console.log("INVALID MOVE")
+                msg.textContent = "Invalid Move"
+
+                board[oldI][oldJ] = state.movingPiece
+                board[i][j] = oldPiece
+                debugger
+                // board = oldBoard
+                return
+            }
+
+        } 
+        
+    }
     state.movingPiece.pos = `r${i}c${j}`
     state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
     board[oldI][oldJ] = null
     state.movingPiece = null
     state.selectedSquare = null
     state.turn *= -1
-    // }
-    // new check logic above
     console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
+}
+
+function findEveryMove(b) {
+    state.allPossibleMoves = []
+    console.log("HITTING ROOK ALL MOVES")
+    b.forEach((r, i) => {
+        r.forEach((sq, j) => {
+            if (sq) {
+                // console.log("SQ: ", sq)
+                sq.allMoves()
+                // sq.moves.forEach(m => {
+                state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
+                // })
+            }
+        })
+    })
+    let blackMoves = state.allPossibleMoves.filter(e => e.team == 'black')
+    let whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
+    //     NOW THAT WE CAN DETERMINE CHECK:
+
+    // we need a function that will determine all possible moves AFTER a hypothetical move has been made
+    // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
+    // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
+    // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
+    state.blackCheck = []
+    state.whiteCheck = []
+    // if (state.whiteCheck) {
+    //     whiteMoves
+    // }
+    whiteMoves.forEach(e => {
+        // console.log(e.moves)
+        e.moves.forEach(m => {
+            // console.log(m)
+            if (m.piece instanceof King && m.piece.team == 'black') {
+                state.blackCheck.push({ piece: e })
+            }
+
+        })
+    })
+    blackMoves.forEach(e => {
+        // console.log(e.moves)
+        e.moves.forEach(m => {
+            // console.log(m)
+            if (m.piece instanceof King && m.piece.team == 'white') {
+                state.whiteCheck.push({ piece: e })
+            }
+
+        })
+    })
+    if (state.blackCheck.length) msg.textContent = "Black is Checked"
+    else if (state.whiteCheck.length) msg.textContent = "White is Checked"
+    else msg.textContent = "Chess"
+    if(state.blackCheck || state.whiteCheck) return {black: state.blackCheck, white: state.whiteCheck}
+    else return false
 }
 
 function handleClick(e) {
@@ -870,7 +961,7 @@ function handleClick(e) {
         if (attemptedSelect.canMove()) {
             console.log("Your Turn :)")
             attemptedSelect.selected()
-            state.movingPiece = attemptedSelect
+            // state.movingPiece = attemptedSelect
             // CHECK ROOK MOVES
             if (state.movingPiece) {
                 // state.allPossibleMoves = []
@@ -913,55 +1004,56 @@ function handleClick(e) {
             }
         }
     }
-    state.allPossibleMoves = []
-    console.log("HITTING ROOK ALL MOVES")
-    board.forEach((r, i) => {
-        r.forEach((sq, j) => {
-            if (sq) {
-                // console.log("SQ: ", sq)
-                sq.allMoves()
-                // sq.moves.forEach(m => {
-                state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
-                // })
-            }
-        })
-    })
-    let blackMoves = state.allPossibleMoves.filter(e => e.team == 'black')
-    let whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
-    //     NOW THAT WE CAN DETERMINE CHECK:
-    
-    // we need a function that will determine all possible moves AFTER a hypothetical move has been made
-    // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
-    // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
-    // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
-    state.blackCheck = []
-    state.whiteCheck = []
-    if (state.whiteCheck) {
-        whiteMoves
-    }
-    whiteMoves.forEach(e => {
-        // console.log(e.moves)
-        e.moves.forEach(m => {
-            console.log(m)
-            if (m.piece instanceof King && m.piece.team == 'black') {
-                state.blackCheck.push({ piece: e })
-            }
+    // state.allPossibleMoves = []
+    // console.log("HITTING ROOK ALL MOVES")
+    // board.forEach((r, i) => {
+    //     r.forEach((sq, j) => {
+    //         if (sq) {
+    //             // console.log("SQ: ", sq)
+    //             sq.allMoves()
+    //             // sq.moves.forEach(m => {
+    //             state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
+    //             // })
+    //         }
+    //     })
+    // })
+    // let blackMoves = state.allPossibleMoves.filter(e => e.team == 'black')
+    // let whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
+    // //     NOW THAT WE CAN DETERMINE CHECK:
 
-        })
-    })
-    blackMoves.forEach(e => {
-        // console.log(e.moves)
-        e.moves.forEach(m => {
-            console.log(m)
-            if (m.piece instanceof King && m.piece.team == 'white') {
-                state.whiteCheck.push({ piece: e })
-            }
+    // // we need a function that will determine all possible moves AFTER a hypothetical move has been made
+    // // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
+    // // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
+    // // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
+    // state.blackCheck = []
+    // state.whiteCheck = []
+    // // if (state.whiteCheck) {
+    // //     whiteMoves
+    // // }
+    // whiteMoves.forEach(e => {
+    //     // console.log(e.moves)
+    //     e.moves.forEach(m => {
+    //         // console.log(m)
+    //         if (m.piece instanceof King && m.piece.team == 'black') {
+    //             state.blackCheck.push({ piece: e })
+    //         }
 
-        })
-    })
-    if (state.blackCheck.length) msg.textContent = "Black is Checked"
-    else if (state.whiteCheck.length) msg.textContent = "White is Checked"
-    else msg.textContent = "Chess"
+    //     })
+    // })
+    // blackMoves.forEach(e => {
+    //     // console.log(e.moves)
+    //     e.moves.forEach(m => {
+    //         // console.log(m)
+    //         if (m.piece instanceof King && m.piece.team == 'white') {
+    //             state.whiteCheck.push({ piece: e })
+    //         }
+
+    //     })
+    // })
+    // if (state.blackCheck.length) msg.textContent = "Black is Checked"
+    // else if (state.whiteCheck.length) msg.textContent = "White is Checked"
+    // else msg.textContent = "Chess"
+    findEveryMove(board)
     renderBoard()
 }
 
