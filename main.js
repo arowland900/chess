@@ -25,6 +25,7 @@ let state = {
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
+let msg = document.getElementById('msg')
 // let flipBoard = document.getElementById('flipBoard')
 let reset = document.getElementById('reset')
 /*----- event Listeners -----*/
@@ -850,18 +851,6 @@ function movePiece(i, j) {
     board[oldI][oldJ] = null
     state.movingPiece = null
     state.selectedSquare = null
-    // new check logic below
-    // checkForCheck(board)
-    // if (state.players[state.turn] == 'white' && state.whiteCheck) {
-    //     state.board = oldBoard
-    // } else if(state.players[state.turn] == 'black' && state.blackCheck){
-    //     state.board = oldBoard
-    // } else {
-    // state.movingPiece.pos = `r${i}c${j}`
-    // state.movingPiece.prev.push(`r${oldI}c${oldJ}`)
-    // board[oldI][oldJ] = null
-    // state.movingPiece = null
-    // state.selectedSquare = null
     state.turn *= -1
     // }
     // new check logic above
@@ -932,14 +921,41 @@ function handleClick(e) {
     board.forEach((r, i) => {
         r.forEach((sq, j) => {
             if (sq) {
-                console.log("SQ: ", sq)
+                // console.log("SQ: ", sq)
                 sq.allMoves()
                 // sq.moves.forEach(m => {
-                state.allPossibleMoves.push({ piece: sq, moves: sq.moves })
+                state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
                 // })
             }
         })
     })
+    let blackMoves = state.allPossibleMoves.filter(e => e.team == 'black')
+    let whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
+    state.blackCheck = false
+    state.whiteCheck = false
+    whiteMoves.forEach(e => {
+        // console.log(e.moves)
+        e.moves.forEach(m => {
+            console.log(m)
+            if(m.piece instanceof King && m.piece.team == 'black'){
+                state.blackCheck = true
+            }
+            
+        })
+    })
+    blackMoves.forEach(e => {
+        // console.log(e.moves)
+        e.moves.forEach(m => {
+            console.log(m)
+            if(m.piece instanceof King && m.piece.team == 'white'){
+                state.whiteCheck = true
+            }
+            
+        })
+    })
+    if(state.blackCheck) msg.textContent = "Black is Checked"
+    else if(state.whiteCheck) msg.textContent = "White is Checked"
+    else msg.textContent = "Chess"
     renderBoard()
 }
 
