@@ -60,6 +60,49 @@ class Pawn extends Piece {
         this.prev = prev
         this.icon = icon
     }
+    allMoves() {
+        this.moves = []
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+
+        if (this.team == 'white') {
+            if (board[i + 1][j] == null) {
+                console.log("one space down pawn")
+                this.moves.push({ spot: [i + 1, j], piece: board[i + 1][j] })
+            }
+            if (board[i + 1][j - 1] != null) {
+                console.log("one space down & left pawn")
+                this.moves.push({ spot: [i + 1, j - 1], piece: board[i + 1][j - 1] })
+            }
+            if (board[i + 1][j + 1] != null) {
+                console.log("one space down & right pawn")
+                this.moves.push({ spot: [i + 1, j + 1], piece: board[i + 1][j + 1] })
+            }
+            if (i == 1 && board[i + 2][j] == null) {
+                console.log("two space down pawn")
+                this.moves.push({ spot: [i + 2, j], piece: board[i + 2][j] })
+            }
+        } else {
+            if (board[i - 1][j] == null) {
+                console.log("one space up pawn")
+                this.moves.push({ spot: [i - 1, j], piece: board[i - 1][j] })
+            }
+            if (board[i - 1][j - 1] != null) {
+                console.log("one space up & left pawn")
+                this.moves.push({ spot: [i - 1, j - 1], piece: board[i - 1][j - 1] })
+            }
+            if (board[i - 1][j + 1] != null) {
+                console.log("one space up & right pawn")
+                this.moves.push({ spot: [i - 1, j + 1], piece: board[i - 1][j + 1] })
+            }
+            if (i == 1 && board[i - 2][j] == null) {
+                console.log("two space up pawn")
+                this.moves.push({ spot: [i - 2, j], piece: board[i - 2][j] })
+            }
+        }
+
+        console.log("ALL PAWN MOVES: ", this.moves)
+    }
     checkMove() {
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
@@ -132,35 +175,35 @@ class Knight extends Piece {
         let rightDown = [i + 1, j + 2]
 
         // CHECK LEFT UP
-        if (leftUp[0] >= 0 && leftUp[1] >= 0){
+        if (leftUp[0] >= 0 && leftUp[1] >= 0) {
             this.moves.push({ spot: [leftUp[0], leftUp[1]], piece: board[leftUp[0]][leftUp[1]] })
         }
         // CHECK UP LEFT
-        if (upLeft[0] >= 0 && upLeft[1] >= 0){
+        if (upLeft[0] >= 0 && upLeft[1] >= 0) {
             this.moves.push({ spot: [upLeft[0], upLeft[1]], piece: board[upLeft[0]][upLeft[1]] })
         }
         // CHECK UP RIGHT
-        if (upRight[0] >= 0 && upRight[1] <= 7){
+        if (upRight[0] >= 0 && upRight[1] <= 7) {
             this.moves.push({ spot: [upRight[0], upRight[1]], piece: board[upRight[0]][upRight[1]] })
         }
         // CHECK RIGHT UP
-        if (rightUp[0] >= 0 && rightUp[1] <= 7){
+        if (rightUp[0] >= 0 && rightUp[1] <= 7) {
             this.moves.push({ spot: [rightUp[0], rightUp[1]], piece: board[rightUp[0]][rightUp[1]] })
         }
 
         // CHECK LEFT DOWN
-        if (leftDown[0] <= 7 && leftDown[1] >= 0){
+        if (leftDown[0] <= 7 && leftDown[1] >= 0) {
             this.moves.push({ spot: [leftDown[0], leftDown[1]], piece: board[leftDown[0]][leftDown[1]] })
         }
         // CHECK DOWN LEFT
-        if (downLeft[0] <= 7 && downLeft[1] >= 0){
+        if (downLeft[0] <= 7 && downLeft[1] >= 0) {
             this.moves.push({ spot: [downLeft[0], downLeft[1]], piece: board[downLeft[0]][downLeft[1]] })
         }
         // CHECK DOWN RIGHT
-        if (downRight[0] <= 7 && downRight[1] <= 7){
+        if (downRight[0] <= 7 && downRight[1] <= 7) {
             this.moves.push({ spot: [downRight[0], downRight[1]], piece: board[downRight[0]][downRight[1]] })
         }
-        if (rightDown[0] <= 7 && rightDown[1] <= 7){
+        if (rightDown[0] <= 7 && rightDown[1] <= 7) {
             this.moves.push({ spot: [rightDown[0], rightDown[1]], piece: board[rightDown[0]][rightDown[1]] })
         }
         console.log("HORSE MOVES: ", this.moves)
@@ -835,7 +878,7 @@ function handleClick(e) {
             attemptedSelect.selected()
             state.movingPiece = attemptedSelect
             // CHECK ROOK MOVES
-            if (state.movingPiece instanceof Rook || state.movingPiece instanceof Queen || state.movingPiece instanceof Bishop || state.movingPiece instanceof Knight) {
+            if (state.movingPiece) {
                 console.log("HITTING ROOK ALL MOVES")
                 state.movingPiece.allMoves()
             }
