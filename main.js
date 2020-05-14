@@ -443,79 +443,90 @@ function init() {
     renderBoard()
 }
 
-function checkForCheck(brd) {
-    // b is what   the potential new board is, if accepted, state.board becomes b
-    let wKingLoc;
-    let bKingLoc;
-    let surroundingBlackKing = {
-        top: null,
-        bottom: null,
-        right: null,
-        left: null,
-        topLeft: null,
-        topRight: null,
-        bottomRight: null,
-        bottomLeft: null,
-    }
-    let surroundingWhiteKing = {
-        top: null,
-        bottom: null,
-        right: null,
-        left: null,
-        topLeft: null,
-        topRight: null,
-        bottomRight: null,
-        bottomLeft: null,
-    }
-    let a, b;
-    // LOCATE KINGS
-    brd.forEach((e, i) => {
-        e.forEach((sq, j) => {
-            if (sq instanceof King && sq.team == 'white') { wKingLoc = [i, j]; a = i; b = j }
-            if (sq instanceof King && sq.team == 'black') { bKingLoc = [i, j]; c = i; d = j }
-        })
-    })
+// function checkForCheck(brd) {
+//     // b is what   the potential new board is, if accepted, state.board becomes b
 
-    console.log("WHITE KING LOC: ", wKingLoc)
-    console.log("BLACK KING LOC: ", bKingLoc)
-    console.log("X & Y: ", a, b)
-
-    function checkHorizontal(posI, posJ, piece, surround){
-        // for(let lCheck = posJ -1, rCheck = posJ +1; lCheck >= 0 || rCheck <= 7; lCheck--, rCheck++){
-        //     if(brd[posI][lCheck]){ piece.horizontal.push(brd[posI][lCheck]) }
-        //     if(brd[posI][rCheck]){ piece.horizontal.push(brd[posI][rCheck]) }
-        //     if(piece.horizontal.length == 2) break
-        // } 
-        console.log(brd[posI], posJ, piece)
-        // LEFT
-        while(posJ >= 0 && !piece.left){
-            let el = brd[posI][posJ]
-            console.log(el, piece)
-            if(el != piece){
-                console.log("HITTING IF")
-
-                surround.left = el
-                break
-            }
-            posJ--
-        }
-    }
-
-    checkHorizontal(a,b, board[wKingLoc[0]][wKingLoc[1]], surroundingWhiteKing)
-    checkHorizontal(c,d, board[bKingLoc[0]][bKingLoc[1]], surroundingBlackKing)
-    // checkVertical(a,b, surroundingWhiteKing)
-    // checkVertical(c,d, surroundingBlackKing)
+//     // location on board of each king
+//     let wKingLoc;
+//     let bKingLoc;
 
 
-    console.log(surroundingWhiteKing, surroundingBlackKing)
-    // if rejected, state.board becomes oldBoard (movePiece function)
-    // check the newly created board in movePiece
-    // if so, make that player's team checked (state.whiteCheck = true || state.blackCheck = true)
+//     // objects containing the pieces surounding the king
+//     let surroundingBlackKing = {
+//         top: null,
+//         bottom: null,
+//         right: null,
+//         left: null,
+//         topLeft: null,
+//         topRight: null,
+//         bottomRight: null,
+//         bottomLeft: null,
+//         enemyKnights: undefined
+//     }
+//     let surroundingWhiteKing = {
+//         top: null,
+//         bottom: null,
+//         right: null,
+//         left: null,
+//         topLeft: null,
+//         topRight: null,
+//         bottomRight: null,
+//         bottomLeft: null,
+//         enemyKnights: undefined,
+//     }
+//     let a, b;
+//     // LOCATE KINGS
+//     brd.forEach((e, i) => {
+//         e.forEach((sq, j) => {
+//             if (sq instanceof King && sq.team == 'white') { wKingLoc = [i, j]; a = i; b = j }
+//             if (sq instanceof King && sq.team == 'black') { bKingLoc = [i, j]; c = i; d = j }
+//         })
+//     })
+
+//     console.log("WHITE KING LOC: ", wKingLoc)
+//     console.log("BLACK KING LOC: ", bKingLoc)
+//     console.log("X & Y: ", a, b)
+
+//     function checkHorizontal(posI, posJ, piece, surround){
+//         let leftPosJ = posJ
+//         let rightPosJ = posJ
+//         while(leftPosJ >= 0 && !piece.left){
+//             let el = brd[posI][leftPosJ]
+//             console.log(el, piece)
+//             if(el != piece){
+//                 console.log("HITTING LEFT IF")
+//                 surround.left = el
+//                 break
+//             }
+//             leftPosJ--
+//         }
+//         while(rightPosJ <= 7 && !piece.right){
+//             let el = brd[posI][rightPosJ]
+//             console.log(el, piece)
+//             if(el != piece){
+//                 console.log("HITTING RIGHT IF")
+//                 surround.right = el
+//                 break
+//             }
+//             rightPosJ++
+//         }
+//     }
+
+//     checkHorizontal(a,b, board[wKingLoc[0]][wKingLoc[1]], surroundingWhiteKing)
+//     checkHorizontal(c,d, board[bKingLoc[0]][bKingLoc[1]], surroundingBlackKing)
+//     // checkVertical(a,b, surroundingWhiteKing)
+//     // checkVertical(c,d, surroundingBlackKing)
 
 
-    // after moving a piece, determine if opposing team is now in check
+//     console.log(surroundingWhiteKing, surroundingBlackKing)
+//     // if rejected, state.board becomes oldBoard (movePiece function)
+//     // check the newly created board in movePiece
+//     // if so, make that player's team checked (state.whiteCheck = true || state.blackCheck = true)
 
-}
+
+//     // after moving a piece, determine if opposing team is now in check
+
+// }
 
 function movePiece(i, j) {
     // new check logic below
@@ -532,7 +543,7 @@ function movePiece(i, j) {
     state.movingPiece = null
     state.selectedSquare = null
     // new check logic below
-    checkForCheck(board)
+    // checkForCheck(board)
     // if (state.players[state.turn] == 'white' && state.whiteCheck) {
     //     state.board = oldBoard
     // } else if(state.players[state.turn] == 'black' && state.blackCheck){
