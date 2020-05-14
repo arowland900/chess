@@ -347,6 +347,55 @@ class Queen extends Piece {
         this.prev = prev
         this.icon = icon
     }
+    allMoves() {
+        this.moves = []
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        let leftPosJ = j - 1
+        let topPosI = i - 1
+        let rightPosJ = j + 1
+        let bottomPosI = i + 1
+        // HORIZONTAL
+        console.log("TOP: ", this.moves)
+        while (leftPosJ >= 0) {
+            let el = board[i][leftPosJ]
+            this.moves.push({ spot: [i, leftPosJ], piece: el })
+            if (el != null) {
+                break
+            }
+            leftPosJ--
+        }
+        console.log("AFTERLEFT: ", this.moves)
+        while (rightPosJ <= 7) {
+            let el = board[i][rightPosJ]
+            this.moves.push({ spot: [i, rightPosJ], piece: el })
+            if (el != null) {
+                break
+            }
+            rightPosJ++
+        }
+        console.log("AFTERRIGHT: ", this.moves)
+        // VERTICAL
+        while (topPosI >= 0) {
+            let el = board[topPosI][j]
+            this.moves.push({ spot: [topPosI, j], piece: el })
+            if (el != null) {
+                break
+            }
+            topPosI--
+        }
+        console.log("AFTER UP: ", this.moves)
+        while (bottomPosI <= 7) {
+            let el = board[bottomPosI][j]
+            this.moves.push({ spot: [bottomPosI, j], piece: el })
+            if (el != null) {
+                break
+            }
+            bottomPosI++
+        }
+        console.log("AFTER DOWN: ", this.moves)
+
+    }
     checkMove() {
         console.log("HITTING QUEEN")
         let i = Number(this.pos.split('')[1])
@@ -624,7 +673,7 @@ function handleClick(e) {
             attemptedSelect.selected()
             state.movingPiece = attemptedSelect
             // CHECK ROOK MOVES
-            if (state.movingPiece instanceof Rook) {
+            if (state.movingPiece instanceof Rook || state.movingPiece instanceof Queen ) {
                 console.log("HITTING ROOK ALL MOVES")
                 state.movingPiece.allMoves()
             }
