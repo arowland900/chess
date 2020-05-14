@@ -71,7 +71,7 @@ class Pawn extends Piece {
         if (this.team == 'white') {
             if (i + 1 == newI && j == newJ && newPosition == null) return true
             if (i + 2 == newI && j == newJ && i == 1 && newPosition == null) {
-                let skippedPosition = board[i+1][j]
+                let skippedPosition = board[i + 1][j]
                 if (skippedPosition == null) {
                     return true
                 }
@@ -90,7 +90,7 @@ class Pawn extends Piece {
             if (i - 1 == newI && j == newJ && newPosition == null) return true
             // console.log()
             if (i - 2 == newI && j == newJ && i == 6 && newPosition == null) {
-                let skippedPosition = board[i-1][j]
+                let skippedPosition = board[i - 1][j]
                 if (skippedPosition == null) {
                     return true
                 }
@@ -443,21 +443,59 @@ function init() {
     renderBoard()
 }
 
-function checkForCheck(b) {
+function checkForCheck(brd) {
     // b is what   the potential new board is, if accepted, state.board becomes b
     let wKingLoc;
     let bKingLoc;
+    let surroundingBlackKing = {
+        horizontal: [],
+        vertical: [],
+        diagonalDown: [],
+        diagonalUp: []
+    }
+    let surroundingWhiteKing = {
+        horizontal: [],
+        vertical: [],
+        diagonalDown: [],
+        diagonalUp: []
+    }
+    let a, b;
     // LOCATE KINGS
-    b.forEach((e, i) => {
+    brd.forEach((e, i) => {
         e.forEach((sq, j) => {
-            if(sq instanceof King && sq.team == 'white') wKingLoc = [i,j]
-            if(sq instanceof King && sq.team == 'black') bKingLoc = [i,j]
+            if (sq instanceof King && sq.team == 'white') { wKingLoc = [i, j]; a = i; b = j }
+            if (sq instanceof King && sq.team == 'black') { bKingLoc = [i, j]; c = i; d = j }
         })
     })
 
-    console.log("WHITE KING LOC: ",wKingLoc)
-    console.log("BLACK KING LOC: ",bKingLoc)
+    console.log("WHITE KING LOC: ", wKingLoc)
+    console.log("BLACK KING LOC: ", bKingLoc)
+    console.log("X & Y: ", a, b)
 
+    function checkHorizontal(posI, posJ, piece){
+        for(let lCheck = posJ -1, rCheck = posJ +1; lCheck >= 0 || rCheck <= 7; lCheck--, rCheck++){
+            if(brd[posI][lCheck]){ piece.horizontal.push(brd[posI][lCheck]) }
+            if(brd[posI][rCheck]){ piece.horizontal.push(brd[posI][rCheck]) }
+            if(piece.horizontal.length == 2) break
+        } 
+    }
+    function checkVertical(posI, posJ, piece){
+        console.log(posI, posJ, piece)
+        for(let tCheck = posI -1, bCheck = posI +1; tCheck >= 0 || bCheck <= 7; tCheck--, bCheck++){
+            // console.log("HITTING VERT LOOP: ", brd[tCheck])
+            // if(tCheck )
+            // if(brd[tCheck][posJ]){ piece.vertical.push(brd[tCheck][posJ]) }
+            // if(brd[bCheck][posJ]){ piece.vertical.push(brd[bCheck][posJ]) }
+            // if(piece.vertical.length == 2) break
+        } 
+    }
+    checkHorizontal(a,b, surroundingWhiteKing)
+    checkHorizontal(c,d, surroundingBlackKing)
+    // checkVertical(a,b, surroundingWhiteKing)
+    // checkVertical(c,d, surroundingBlackKing)
+
+
+    console.log(surroundingWhiteKing, surroundingBlackKing)
     // if rejected, state.board becomes oldBoard (movePiece function)
     // check the newly created board in movePiece
     // if so, make that player's team checked (state.whiteCheck = true || state.blackCheck = true)
