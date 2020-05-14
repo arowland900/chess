@@ -696,6 +696,34 @@ class King extends Piece {
     allMoves() {
         this.moves = []
         // console.log("NO KING LOGIC YET")
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+
+        if(i-1 >= 0){
+            if(j-1 >= 0){
+                this.moves.push({ spot: [i-1, j-1], piece: board[i-1][j-1] })
+            }
+            this.moves.push({ spot: [i-1, j-1], piece: board[i-1][j] })
+            if(j+1 <= 7){
+                this.moves.push({ spot: [i-1, j-1], piece: board[i-1][j+1] })
+            }
+        }
+        if(j-1 >= 0){
+            this.moves.push({ spot: [i, j-1], piece: board[i][j-1] })
+        }
+        if(j+1 <=7){
+            this.moves.push({ spot: [i, j+1], piece: board[i][j+1] })
+        }
+        if(i+1 <= 7){
+            if(j-1 >= 0){
+                this.moves.push({ spot: [i+1, j-1], piece: board[i+1][j-1] })
+            }
+            this.moves.push({ spot: [i+1, j-1], piece: board[i+1][j] })
+            if(j+1 <= 7){
+                this.moves.push({ spot: [i+1, j-1], piece: board[i+1][j+1] })
+            }
+        }
+        
     }
     checkMove() {
         // console.log("HITTING KING")
