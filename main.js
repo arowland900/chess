@@ -29,13 +29,14 @@ let gameBoard = document.getElementById('board')
 let msg = document.getElementById('msg')
 // let flipBoard = document.getElementById('flipBoard')
 let reset = document.getElementById('reset')
+
 /*----- event Listeners -----*/
 gameBoard.addEventListener('click', handleClick)
 // flipBoard.addEventListener('click', flip)
 reset.addEventListener('click', init)
+
+
 /*----- classes -----*/
-
-
 class Piece {
     constructor(team, pos, prev, icon) {
         this.team = team
@@ -781,90 +782,6 @@ function init() {
     renderBoard()
 }
 
-// function checkForCheck(brd) {
-//     // b is what   the potential new board is, if accepted, state.board becomes b
-
-//     // location on board of each king
-//     let wKingLoc;
-//     let bKingLoc;
-
-
-//     // objects containing the pieces surounding the king
-//     let surroundingBlackKing = {
-//         top: null,
-//         bottom: null,
-//         right: null,
-//         left: null,
-//         topLeft: null,
-//         topRight: null,
-//         bottomRight: null,
-//         bottomLeft: null,
-//         enemyKnights: undefined
-//     }
-//     let surroundingWhiteKing = {
-//         top: null,
-//         bottom: null,
-//         right: null,
-//         left: null,
-//         topLeft: null,
-//         topRight: null,
-//         bottomRight: null,
-//         bottomLeft: null,
-//         enemyKnights: undefined,
-//     }
-//     let a, b;
-//     // LOCATE KINGS
-//     brd.forEach((e, i) => {
-//         e.forEach((sq, j) => {
-//             if (sq instanceof King && sq.team == 'white') { wKingLoc = [i, j]; a = i; b = j }
-//             if (sq instanceof King && sq.team == 'black') { bKingLoc = [i, j]; c = i; d = j }
-//         })
-//     })
-
-    // console.log("WHITE KING LOC: ", wKingLoc)
-//     console.log("BLACK KING LOC: ", bKingLoc)
-//     console.log("X & Y: ", a, b)
-
-//     function checkHorizontal(posI, posJ, piece, surround){
-//         let leftPosJ = posJ
-//         let rightPosJ = posJ
-//         while(leftPosJ >= 0 && !piece.left){
-//             let el = brd[posI][leftPosJ]
-//             console.log(el, piece)
-//             if(el != piece){
-//                 console.log("HITTING LEFT IF")
-//                 surround.left = el
-//                 break
-//             }
-//             leftPosJ--
-//         }
-//         while(rightPosJ <= 7 && !piece.right){
-//             let el = brd[posI][rightPosJ]
-//             console.log(el, piece)
-//             if(el != piece){
-//                 console.log("HITTING RIGHT IF")
-//                 surround.right = el
-//                 break
-//             }
-//             rightPosJ++
-//         }
-//     }
-
-//     checkHorizontal(a,b, board[wKingLoc[0]][wKingLoc[1]], surroundingWhiteKing)
-//     checkHorizontal(c,d, board[bKingLoc[0]][bKingLoc[1]], surroundingBlackKing)
-//     // checkVertical(a,b, surroundingWhiteKing)
-//     // checkVertical(c,d, surroundingBlackKing)
-
-
-//     console.log(surroundingWhiteKing, surroundingBlackKing)
-//     // if rejected, state.board becomes oldBoard (movePiece function)
-//     // check the newly created board in movePiece
-//     // if so, make that player's team checked (state.whiteCheck = true || state.blackCheck = true)
-
-
-//     // after moving a piece, determine if opposing team is now in check
-
-// }
 
 function movePiece(i, j) {
     // new check logic below
@@ -946,15 +863,11 @@ function movePiece(i, j) {
 
 function findEveryMove(b) { 
     state.allPossibleMoves = []
-    console.log("HITTING ROOK ALL MOVES")
     b.forEach((r, i) => {
         r.forEach((sq, j) => {
             if (sq) {
-                // console.log("SQ: ", sq)
                 sq.allMoves()
-                // sq.moves.forEach(m => {
                 state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
-                // })
             }
         })
     })
@@ -995,7 +908,7 @@ function findEveryMove(b) {
     else if (state.whiteCheck.length && msg.textContent != "Invalid Move") msg.textContent = "White is Checked"
     else if(msg.textContent == "Invalid Move") msg.textContent != "Invalid Move"
     else msg.textContent = "Chess"
-    if(state.blackCheck || state.whiteCheck) return {black: state.blackCheck, white: state.whiteCheck}
+    if(state.blackCheck.length || state.whiteCheck.length) return {black: state.blackCheck, white: state.whiteCheck}
     else return false
 }
 
