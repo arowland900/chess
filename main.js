@@ -448,16 +448,24 @@ function checkForCheck(brd) {
     let wKingLoc;
     let bKingLoc;
     let surroundingBlackKing = {
-        horizontal: [],
-        vertical: [],
-        diagonalDown: [],
-        diagonalUp: []
+        top: null,
+        bottom: null,
+        right: null,
+        left: null,
+        topLeft: null,
+        topRight: null,
+        bottomRight: null,
+        bottomLeft: null,
     }
     let surroundingWhiteKing = {
-        horizontal: [],
-        vertical: [],
-        diagonalDown: [],
-        diagonalUp: []
+        top: null,
+        bottom: null,
+        right: null,
+        left: null,
+        topLeft: null,
+        topRight: null,
+        bottomRight: null,
+        bottomLeft: null,
     }
     let a, b;
     // LOCATE KINGS
@@ -472,25 +480,29 @@ function checkForCheck(brd) {
     console.log("BLACK KING LOC: ", bKingLoc)
     console.log("X & Y: ", a, b)
 
-    function checkHorizontal(posI, posJ, piece){
-        for(let lCheck = posJ -1, rCheck = posJ +1; lCheck >= 0 || rCheck <= 7; lCheck--, rCheck++){
-            if(brd[posI][lCheck]){ piece.horizontal.push(brd[posI][lCheck]) }
-            if(brd[posI][rCheck]){ piece.horizontal.push(brd[posI][rCheck]) }
-            if(piece.horizontal.length == 2) break
-        } 
+    function checkHorizontal(posI, posJ, piece, surround){
+        // for(let lCheck = posJ -1, rCheck = posJ +1; lCheck >= 0 || rCheck <= 7; lCheck--, rCheck++){
+        //     if(brd[posI][lCheck]){ piece.horizontal.push(brd[posI][lCheck]) }
+        //     if(brd[posI][rCheck]){ piece.horizontal.push(brd[posI][rCheck]) }
+        //     if(piece.horizontal.length == 2) break
+        // } 
+        console.log(brd[posI], posJ, piece)
+        // LEFT
+        while(posJ >= 0 && !piece.left){
+            let el = brd[posI][posJ]
+            console.log(el, piece)
+            if(el != piece){
+                console.log("HITTING IF")
+
+                surround.left = el
+                break
+            }
+            posJ--
+        }
     }
-    function checkVertical(posI, posJ, piece){
-        console.log(posI, posJ, piece)
-        for(let tCheck = posI -1, bCheck = posI +1; tCheck >= 0 || bCheck <= 7; tCheck--, bCheck++){
-            // console.log("HITTING VERT LOOP: ", brd[tCheck])
-            // if(tCheck )
-            // if(brd[tCheck][posJ]){ piece.vertical.push(brd[tCheck][posJ]) }
-            // if(brd[bCheck][posJ]){ piece.vertical.push(brd[bCheck][posJ]) }
-            // if(piece.vertical.length == 2) break
-        } 
-    }
-    checkHorizontal(a,b, surroundingWhiteKing)
-    checkHorizontal(c,d, surroundingBlackKing)
+
+    checkHorizontal(a,b, board[wKingLoc[0]][wKingLoc[1]], surroundingWhiteKing)
+    checkHorizontal(c,d, board[bKingLoc[0]][bKingLoc[1]], surroundingBlackKing)
     // checkVertical(a,b, surroundingWhiteKing)
     // checkVertical(c,d, surroundingBlackKing)
 
