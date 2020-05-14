@@ -240,30 +240,49 @@ class Rook extends Piece {
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
         let leftPosJ = j - 1
+        let topPosI = i - 1
         let rightPosJ = j + 1
+        let bottomPosI = i + 1
         // HORIZONTAL
-        while (leftPosJ >= 0 ) {
+        console.log("TOP: ", this.moves)
+        while (leftPosJ >= 0) {
             let el = board[i][leftPosJ]
-            if (el == null) {
-                this.moves.push(el)
-            }
-            if(el != null){
-                this.moves.push(el)
+            this.moves.push({ spot: [i, leftPosJ], piece: el })
+            if (el != null) {
                 break
             }
             leftPosJ--
         }
+        console.log("AFTERLEFT: ", this.moves)
         while (rightPosJ <= 7) {
             let el = board[i][rightPosJ]
-            if (el == null) {
-                this.moves.push(el)
-            }
-            if(el != null){
-                this.moves.push(el)
+            this.moves.push({ spot: [i, rightPosJ], piece: el })
+            if (el != null) {
                 break
             }
             rightPosJ++
         }
+        console.log("AFTERRIGHT: ", this.moves)
+        // VERTICAL
+        while (topPosI >= 0) {
+            let el = board[topPosI][j]
+            this.moves.push({ spot: [topPosI, j], piece: el })
+            if (el != null) {
+                break
+            }
+            topPosI--
+        }
+        console.log("AFTER UP: ", this.moves)
+        while (bottomPosI <= 7) {
+            let el = board[bottomPosI][j]
+            this.moves.push({ spot: [bottomPosI, j], piece: el })
+            if (el != null) {
+                break
+            }
+            bottomPosI++
+        }
+        console.log("AFTER DOWN: ", this.moves)
+
     }
     checkMove() {
         console.log("HITTING")
@@ -597,23 +616,25 @@ function handleClick(e) {
     // check to see if the space selected has a piece
     let attemptedSelect = board[i][j]
     state.selectedSquare = [i, j]
+
     // if so, check to see if it is the proper player's turn
     if (attemptedSelect) {
         if (attemptedSelect.canMove()) {
             console.log("Your Turn :)")
             attemptedSelect.selected()
             state.movingPiece = attemptedSelect
-
+            // CHECK ROOK MOVES
+            if (state.movingPiece instanceof Rook) {
+                console.log("HITTING ROOK ALL MOVES")
+                state.movingPiece.allMoves()
+            }
+            // CHECK ROOK MOVES
             console.log("THIS IS THE SELECTED PIECE", state.movingPiece)
         } else {
             console.log("STATE MOVING PIECE :", state.movingPiece)
             if (state.movingPiece && state.movingPiece.checkMove()) {
                 // if()
-                console.log("HITTING IF STATEMENT FOR ATTACK")
-                if(state.movingPiece instanceof Rook){
-                    console.log("HITTING ROOK ALL MOVES")
-                    state.movingPiece.allMoves()
-                }
+
                 movePiece(i, j)
             } else {
 
@@ -626,10 +647,7 @@ function handleClick(e) {
         if (state.movingPiece && !attemptedSelect) {
             // state.selectedSquare = [i, j]
             if (state.movingPiece.checkMove()) {
-                if(state.movingPiece instanceof Rook){
-                    console.log("HITTING ROOK ALL MOVES")
-                    state.movingPiece.allMoves()
-                }
+
                 movePiece(i, j)
             } else {
                 console.log("Invalid move, please try again!")
