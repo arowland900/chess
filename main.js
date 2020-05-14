@@ -944,7 +944,7 @@ function movePiece(i, j) {
     console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
 }
 
-function findEveryMove(b) {
+function findEveryMove(b) { 
     state.allPossibleMoves = []
     console.log("HITTING ROOK ALL MOVES")
     b.forEach((r, i) => {
