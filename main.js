@@ -116,6 +116,59 @@ class Knight extends Piece {
         this.prev = prev
         this.icon = icon
     }
+    allMoves() {
+        this.moves = []
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+
+        let leftUp = [i - 1, j - 2]
+        let upLeft = [i - 2, j - 1]
+        let upRight = [i - 2, j + 1]
+        let rightUp = [i - 1, j + 2]
+
+        let leftDown = [i + 1, j - 2]
+        let downLeft = [i + 2, j - 1]
+        let downRight = [i + 2, j + 1]
+        let rightDown = [i + 1, j + 2]
+
+        // CHECK LEFT UP
+        if (leftUp[0] >= 0 && leftUp[1] >= 0){
+            this.moves.push({ spot: [leftUp[0], leftUp[1]], piece: board[leftUp[0]][leftUp[1]] })
+        }
+        // CHECK UP LEFT
+        if (upLeft[0] >= 0 && upLeft[1] >= 0){
+            this.moves.push({ spot: [upLeft[0], upLeft[1]], piece: board[upLeft[0]][upLeft[1]] })
+        }
+        // CHECK UP RIGHT
+        if (upRight[0] >= 0 && upRight[1] <= 7){
+            this.moves.push({ spot: [upRight[0], upRight[1]], piece: board[upRight[0]][upRight[1]] })
+        }
+        // CHECK RIGHT UP
+        if (rightUp[0] >= 0 && rightUp[1] <= 7){
+            this.moves.push({ spot: [rightUp[0], rightUp[1]], piece: board[rightUp[0]][rightUp[1]] })
+        }
+
+        // CHECK LEFT DOWN
+        if (leftDown[0] <= 7 && leftDown[1] >= 0){
+            this.moves.push({ spot: [leftDown[0], leftDown[1]], piece: board[leftDown[0]][leftDown[1]] })
+        }
+        // CHECK DOWN LEFT
+        if (downLeft[0] <= 7 && downLeft[1] >= 0){
+            this.moves.push({ spot: [downLeft[0], downLeft[1]], piece: board[downLeft[0]][downLeft[1]] })
+        }
+        // CHECK DOWN RIGHT
+        if (downRight[0] <= 7 && downRight[1] <= 7){
+            this.moves.push({ spot: [downRight[0], downRight[1]], piece: board[downRight[0]][downRight[1]] })
+        }
+        if (rightDown[0] <= 7 && rightDown[1] <= 7){
+            this.moves.push({ spot: [rightDown[0], rightDown[1]], piece: board[rightDown[0]][rightDown[1]] })
+        }
+        console.log("HORSE MOVES: ", this.moves)
+
+
+
+        // if
+    }
     checkMove() {
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
@@ -202,7 +255,7 @@ class Bishop extends Piece {
         let downRightJ = j + 1
 
         // UP LEFT LOGIC
-        while(upLeftI >= 0 && upLeftJ >= 0){
+        while (upLeftI >= 0 && upLeftJ >= 0) {
             let el = board[upLeftI][upLeftJ]
             this.moves.push({ spot: [upLeftI, upLeftJ], piece: el })
             if (el != null) {
@@ -212,7 +265,7 @@ class Bishop extends Piece {
             upLeftJ--
         }
         // UP RIGHT LOGIC
-        while(upRightI >= 0 && upRightJ <= 7){
+        while (upRightI >= 0 && upRightJ <= 7) {
             let el = board[upRightI][upRightJ]
             this.moves.push({ spot: [upRightI, upRightJ], piece: el })
             if (el != null) {
@@ -222,7 +275,7 @@ class Bishop extends Piece {
             upRightJ++
         }
         // DOWN LEFT LOGIC
-        while(downLeftI <= 7 && downLeftJ >= 0){
+        while (downLeftI <= 7 && downLeftJ >= 0) {
             let el = board[downLeftI][downLeftJ]
             this.moves.push({ spot: [downLeftI, downLeftJ], piece: el })
             if (el != null) {
@@ -232,7 +285,7 @@ class Bishop extends Piece {
             downLeftJ--
         }
         // DOWN RIGHT LOGIC
-        while(downRightI <= 7 && downRightJ <= 7){
+        while (downRightI <= 7 && downRightJ <= 7) {
             let el = board[downRightI][downRightJ]
             this.moves.push({ spot: [downRightI, downRightJ], piece: el })
             if (el != null) {
@@ -463,7 +516,7 @@ class Queen extends Piece {
         let downRightJ = j + 1
 
         // UP LEFT LOGIC
-        while(upLeftI >= 0 && upLeftJ >= 0){
+        while (upLeftI >= 0 && upLeftJ >= 0) {
             let el = board[upLeftI][upLeftJ]
             this.moves.push({ spot: [upLeftI, upLeftJ], piece: el })
             if (el != null) {
@@ -473,7 +526,7 @@ class Queen extends Piece {
             upLeftJ--
         }
         // UP RIGHT LOGIC
-        while(upRightI >= 0 && upRightJ <= 7){
+        while (upRightI >= 0 && upRightJ <= 7) {
             let el = board[upRightI][upRightJ]
             this.moves.push({ spot: [upRightI, upRightJ], piece: el })
             if (el != null) {
@@ -483,7 +536,7 @@ class Queen extends Piece {
             upRightJ++
         }
         // DOWN LEFT LOGIC
-        while(downLeftI <= 7 && downLeftJ >= 0){
+        while (downLeftI <= 7 && downLeftJ >= 0) {
             let el = board[downLeftI][downLeftJ]
             this.moves.push({ spot: [downLeftI, downLeftJ], piece: el })
             if (el != null) {
@@ -493,7 +546,7 @@ class Queen extends Piece {
             downLeftJ--
         }
         // DOWN RIGHT LOGIC
-        while(downRightI <= 7 && downRightJ <= 7){
+        while (downRightI <= 7 && downRightJ <= 7) {
             let el = board[downRightI][downRightJ]
             this.moves.push({ spot: [downRightI, downRightJ], piece: el })
             if (el != null) {
@@ -782,7 +835,7 @@ function handleClick(e) {
             attemptedSelect.selected()
             state.movingPiece = attemptedSelect
             // CHECK ROOK MOVES
-            if (state.movingPiece instanceof Rook || state.movingPiece instanceof Queen || state.movingPiece instanceof Bishop) {
+            if (state.movingPiece instanceof Rook || state.movingPiece instanceof Queen || state.movingPiece instanceof Bishop || state.movingPiece instanceof Knight) {
                 console.log("HITTING ROOK ALL MOVES")
                 state.movingPiece.allMoves()
             }
