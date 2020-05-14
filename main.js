@@ -859,8 +859,26 @@ function movePiece(i, j) {
     if(findEveryMove(board)){
         if(players[state.turn] == 'white'){
             console.log('check still here, white turn')
+            // let getOutofCheckMoves = []
+            // state.allPossibleMoves.forEach((e, x) => {
+            //     console.log(`${x}: `, e)
+            // })
+
+            
             if(state.whiteCheck.length){
+                
+                // DETERMINE IF ANY MOVE CAN GET YOU OUT OF CHECK
+                // for(let x = 0; x < state.allPossibleMoves.length; x++){
+                //     console.log(state.allPossibleMoves[x])
+                //     let pieceI = state.allPossibleMoves[x].piece.pos.split('')[1]
+                //     let pieceJ = state.allPossibleMoves[x].piece.pos.split('')[3]
+                //     movePiece(pieceI, pieceJ)
+    
+                // }
+
+
                 console.log("INVALID MOVE")
+                console.log("All Possible Moves: ", state.allPossibleMoves)
                 msg.textContent = "Invalid Move"
                 // board = oldBoard
                 board[oldI][oldJ] = state.movingPiece
@@ -871,13 +889,16 @@ function movePiece(i, j) {
         } 
         if(players[state.turn] == 'black'){
             console.log('check still here, black turn')
+
+            // DETERMINE IF ANY MOVE CAN GET YOU OUT OF CHECK
             if(state.blackCheck.length){
                 console.log("INVALID MOVE")
+                console.log("All Possible Moves: ", state.allPossibleMoves)
                 msg.textContent = "Invalid Move"
 
                 board[oldI][oldJ] = state.movingPiece
                 board[i][j] = oldPiece
-                debugger
+                // debugger
                 // board = oldBoard
                 return
             }
@@ -891,6 +912,7 @@ function movePiece(i, j) {
     state.movingPiece = null
     state.selectedSquare = null
     state.turn *= -1
+    msg.textContent = "Chess"
     console.log("Bottom of movePiece: ", state.movingPiece, state.selectedSquare)
 }
 
@@ -941,8 +963,9 @@ function findEveryMove(b) {
 
         })
     })
-    if (state.blackCheck.length) msg.textContent = "Black is Checked"
-    else if (state.whiteCheck.length) msg.textContent = "White is Checked"
+    if (state.blackCheck.length && msg.textContent != "Invalid Move") msg.textContent = "Black is Checked"
+    else if (state.whiteCheck.length && msg.textContent != "Invalid Move") msg.textContent = "White is Checked"
+    else if(msg.textContent == "Invalid Move") msg.textContent != "Invalid Move"
     else msg.textContent = "Chess"
     if(state.blackCheck || state.whiteCheck) return {black: state.blackCheck, white: state.whiteCheck}
     else return false
@@ -1004,55 +1027,7 @@ function handleClick(e) {
             }
         }
     }
-    // state.allPossibleMoves = []
-    // console.log("HITTING ROOK ALL MOVES")
-    // board.forEach((r, i) => {
-    //     r.forEach((sq, j) => {
-    //         if (sq) {
-    //             // console.log("SQ: ", sq)
-    //             sq.allMoves()
-    //             // sq.moves.forEach(m => {
-    //             state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
-    //             // })
-    //         }
-    //     })
-    // })
-    // let blackMoves = state.allPossibleMoves.filter(e => e.team == 'black')
-    // let whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
-    // //     NOW THAT WE CAN DETERMINE CHECK:
-
-    // // we need a function that will determine all possible moves AFTER a hypothetical move has been made
-    // // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
-    // // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
-    // // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
-    // state.blackCheck = []
-    // state.whiteCheck = []
-    // // if (state.whiteCheck) {
-    // //     whiteMoves
-    // // }
-    // whiteMoves.forEach(e => {
-    //     // console.log(e.moves)
-    //     e.moves.forEach(m => {
-    //         // console.log(m)
-    //         if (m.piece instanceof King && m.piece.team == 'black') {
-    //             state.blackCheck.push({ piece: e })
-    //         }
-
-    //     })
-    // })
-    // blackMoves.forEach(e => {
-    //     // console.log(e.moves)
-    //     e.moves.forEach(m => {
-    //         // console.log(m)
-    //         if (m.piece instanceof King && m.piece.team == 'white') {
-    //             state.whiteCheck.push({ piece: e })
-    //         }
-
-    //     })
-    // })
-    // if (state.blackCheck.length) msg.textContent = "Black is Checked"
-    // else if (state.whiteCheck.length) msg.textContent = "White is Checked"
-    // else msg.textContent = "Chess"
+   
     findEveryMove(board)
     renderBoard()
 }
