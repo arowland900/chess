@@ -191,7 +191,7 @@ class Bishop extends Piece {
         this.moves = []
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
-        // UP LEFT CHECK 
+        // DIAGONAL
         let upLeftI = i - 1
         let upLeftJ = j - 1
         let upRightI = i - 1
@@ -202,7 +202,7 @@ class Bishop extends Piece {
         let downRightJ = j + 1
 
         // UP LEFT LOGIC
-        while(upLeftI >= 0){
+        while(upLeftI >= 0 && upLeftJ >= 0){
             let el = board[upLeftI][upLeftJ]
             this.moves.push({ spot: [upLeftI, upLeftJ], piece: el })
             if (el != null) {
@@ -212,7 +212,7 @@ class Bishop extends Piece {
             upLeftJ--
         }
         // UP RIGHT LOGIC
-        while(upRightI >= 0){
+        while(upRightI >= 0 && upRightJ <= 7){
             let el = board[upRightI][upRightJ]
             this.moves.push({ spot: [upRightI, upRightJ], piece: el })
             if (el != null) {
@@ -222,7 +222,7 @@ class Bishop extends Piece {
             upRightJ++
         }
         // DOWN LEFT LOGIC
-        while(downLeftI <= 7){
+        while(downLeftI <= 7 && downLeftJ >= 0){
             let el = board[downLeftI][downLeftJ]
             this.moves.push({ spot: [downLeftI, downLeftJ], piece: el })
             if (el != null) {
@@ -232,7 +232,7 @@ class Bishop extends Piece {
             downLeftJ--
         }
         // DOWN RIGHT LOGIC
-        while(downRightI <= 7){
+        while(downRightI <= 7 && downRightJ <= 7){
             let el = board[downRightI][downRightJ]
             this.moves.push({ spot: [downRightI, downRightJ], piece: el })
             if (el != null) {
@@ -450,6 +450,59 @@ class Queen extends Piece {
             bottomPosI++
         }
         console.log("AFTER DOWN: ", this.moves)
+
+
+        // DIAGONAL
+        let upLeftI = i - 1
+        let upLeftJ = j - 1
+        let upRightI = i - 1
+        let upRightJ = j + 1
+        let downLeftI = i + 1
+        let downLeftJ = j - 1
+        let downRightI = i + 1
+        let downRightJ = j + 1
+
+        // UP LEFT LOGIC
+        while(upLeftI >= 0 && upLeftJ >= 0){
+            let el = board[upLeftI][upLeftJ]
+            this.moves.push({ spot: [upLeftI, upLeftJ], piece: el })
+            if (el != null) {
+                break
+            }
+            upLeftI--
+            upLeftJ--
+        }
+        // UP RIGHT LOGIC
+        while(upRightI >= 0 && upRightJ <= 7){
+            let el = board[upRightI][upRightJ]
+            this.moves.push({ spot: [upRightI, upRightJ], piece: el })
+            if (el != null) {
+                break
+            }
+            upRightI--
+            upRightJ++
+        }
+        // DOWN LEFT LOGIC
+        while(downLeftI <= 7 && downLeftJ >= 0){
+            let el = board[downLeftI][downLeftJ]
+            this.moves.push({ spot: [downLeftI, downLeftJ], piece: el })
+            if (el != null) {
+                break
+            }
+            downLeftI++
+            downLeftJ--
+        }
+        // DOWN RIGHT LOGIC
+        while(downRightI <= 7 && downRightJ <= 7){
+            let el = board[downRightI][downRightJ]
+            this.moves.push({ spot: [downRightI, downRightJ], piece: el })
+            if (el != null) {
+                break
+            }
+            downRightI++
+            downRightJ++
+        }
+        console.log("BISHOP MOVES: ", this.moves)
 
     }
     checkMove() {
