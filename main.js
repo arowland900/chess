@@ -235,6 +235,36 @@ class Rook extends Piece {
         this.prev = prev
         this.icon = icon
     }
+    allMoves() {
+        this.moves = []
+        let i = Number(this.pos.split('')[1])
+        let j = Number(this.pos.split('')[3])
+        let leftPosJ = j - 1
+        let rightPosJ = j + 1
+        // HORIZONTAL
+        while (leftPosJ >= 0 ) {
+            let el = board[i][leftPosJ]
+            if (el == null) {
+                this.moves.push(el)
+            }
+            if(el != null){
+                this.moves.push(el)
+                break
+            }
+            leftPosJ--
+        }
+        while (rightPosJ <= 7) {
+            let el = board[i][rightPosJ]
+            if (el == null) {
+                this.moves.push(el)
+            }
+            if(el != null){
+                this.moves.push(el)
+                break
+            }
+            rightPosJ++
+        }
+    }
     checkMove() {
         console.log("HITTING")
         let i = Number(this.pos.split('')[1])
@@ -580,6 +610,10 @@ function handleClick(e) {
             if (state.movingPiece && state.movingPiece.checkMove()) {
                 // if()
                 console.log("HITTING IF STATEMENT FOR ATTACK")
+                if(state.movingPiece instanceof Rook){
+                    console.log("HITTING ROOK ALL MOVES")
+                    state.movingPiece.allMoves()
+                }
                 movePiece(i, j)
             } else {
 
@@ -592,6 +626,10 @@ function handleClick(e) {
         if (state.movingPiece && !attemptedSelect) {
             // state.selectedSquare = [i, j]
             if (state.movingPiece.checkMove()) {
+                if(state.movingPiece instanceof Rook){
+                    console.log("HITTING ROOK ALL MOVES")
+                    state.movingPiece.allMoves()
+                }
                 movePiece(i, j)
             } else {
                 console.log("Invalid move, please try again!")
