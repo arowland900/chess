@@ -219,6 +219,9 @@ class Knight extends Piece {
 
 
         // if
+        this.moves.forEach(m => {
+            m.spot = JSON.stringify(m.spot)
+        })
     }
     checkMove() {
         let i = Number(this.pos.split('')[1])
@@ -345,6 +348,9 @@ class Bishop extends Piece {
             downRightI++
             downRightJ++
         }
+        this.moves.forEach(m => {
+            m.spot = JSON.stringify(m.spot)
+        })
         // console.log("BISHOP MOVES: ", this.moves)
     }
     checkMove() {
@@ -441,6 +447,9 @@ class Rook extends Piece {
             }
             bottomPosI++
         }
+        this.moves.forEach(m => {
+            m.spot = JSON.stringify(m.spot)
+        })
         // console.log("AFTER DOWN: ", this.moves)
 
     }
@@ -608,6 +617,9 @@ class Queen extends Piece {
         }
         // console.log("BISHOP MOVES: ", this.moves)
 
+        this.moves.forEach(m => {
+            m.spot = JSON.stringify(m.spot)
+        })
     }
     checkMove() {
         // console.log("HITTING QUEEN")
@@ -703,15 +715,15 @@ class King extends Piece {
         // console.log("NO KING LOGIC YET")
         let i = Number(this.pos.split('')[1])
         let j = Number(this.pos.split('')[3])
-        console.log("KING TOP ALLMOVES: ", this.moves)
-        
+        // console.log("KING TOP ALLMOVES: ", this.moves)
+
         if (i - 1 >= 0) {
             if (j - 1 >= 0) {
                 this.moves.push({ spot: [i - 1, j - 1], piece: board[i - 1][j - 1] })
             }
-            this.moves.push({ spot: [i - 1, j - 1], piece: board[i - 1][j] })
+            this.moves.push({ spot: [i - 1, j], piece: board[i - 1][j] })
             if (j + 1 <= 7) {
-                this.moves.push({ spot: [i - 1, j - 1], piece: board[i - 1][j + 1] })
+                this.moves.push({ spot: [i - 1, j + 1], piece: board[i - 1][j + 1] })
             }
         }
         if (j - 1 >= 0) {
@@ -724,13 +736,18 @@ class King extends Piece {
             if (j - 1 >= 0) {
                 this.moves.push({ spot: [i + 1, j - 1], piece: board[i + 1][j - 1] })
             }
-            this.moves.push({ spot: [i + 1, j - 1], piece: board[i + 1][j] })
+            this.moves.push({ spot: [i + 1, j], piece: board[i + 1][j] })
             if (j + 1 <= 7) {
-                this.moves.push({ spot: [i + 1, j - 1], piece: board[i + 1][j + 1] })
+                this.moves.push({ spot: [i + 1, j + 1], piece: board[i + 1][j + 1] })
             }
         }
-        console.log("KING BOTTOM ALLMOVES: ", this.moves)
-        
+        // console.log("KING MOVES: ", this.moves)
+        this.moves.forEach((m,i) => {
+            m.spot = JSON.stringify(m.spot)
+            // console.log(`KING MOVE ${i}: `, m)
+        })
+        // console.log("KING BOTTOM ALLMOVES: ", this.moves)
+
     }
     checkMove() {
         // console.log("HITTING KING")
@@ -789,36 +806,79 @@ function init() {
 }
 
 function doesCheckStillExist(potentialMovingPiece) {
-    let possibleMoves = []
-    let oldBoard = [...board]
+    let possibleMoves = potentialMovingPiece.moves
+    let foundEscape = false
+    // let oldBoard = JSON.stringify(board)
 
-    // console.log(state.whiteMoves)
+    // let oldBoard = [...board]
+    // let oldBoard = []
+
+
+    // console.log(oldBoard)
+    console.log("potential moving piece: ", potentialMovingPiece)
+    console.log("current board layout for potential moving piece: ", board)
+    console.log("possible moves for potential moving piece: ", possibleMoves)
+    // debugger
 
     // console.log('potentialMovingPiece: ', potentialMovingPiece)
-    let oldI = potentialMovingPiece.piece.pos.split('')[1]
-    let oldJ = potentialMovingPiece.piece.pos.split('')[3]
+    let oldI = potentialMovingPiece.pos.split('')[1]
+    let oldJ = potentialMovingPiece.pos.split('')[3]
     let piece = board[oldI][oldJ]
+    // let piece = potentialMovingPiece
     let isMoveValid = false
     let newI
     let newJ
     // console.log("Piece: ", piece)
-    potentialMovingPiece.piece.moves.forEach(m => {
-        m.spot[0] = newI
-        m.spot[1] = newJ
+    for(let x = 0; x < potentialMovingPiece.moves.length || foundEscape == false; x++){
+        let m = potentialMovingPiece.moves[x]
+    // potentialMovingPiece.moves.forEach((m, x) => {
+        let s = JSON.parse(m.spot)
+        console.log("m.spot please have a value parsed correctly! :", s)
+        newI = s[0]
+        newJ = s[1]
+        // console.log(board[newI][newJ].team)
+        if(board[newI][newJ] == null || board[newI][newJ].team != players[state.turn]){
+            console.log("NEW I & J: ",newI, newJ)
+            board[newI][newJ] = piece
+            board[oldI][oldJ] = null
+            console.log("New Potential Board: ", board)
+            console.log("Piece Being Observer: ", piece)
+            // debugger
+            // right here we need to check if this new potential board still has a check
+            let isCheck = findEveryMoveInCheckMate(board)
+            console.log(isCheck)
+            if(isCheck){
+                console.log('Old piece location on board (should be null): ',board[oldI][oldJ])
+                console.log('New piece location on board (should be == piece (line 836)): ',board[newI][newJ])
+                board[oldI][oldJ] = piece
+                
+                board[newI][newJ] = null
+                console.log('Old piece location on board after swap back(should be  == piece (line 836)): ',board[oldI][oldJ])
+                console.log('New piece location on board (should be null): ',board[newI][newJ])
 
-        // board[newI][newJ] = piece
-        // board[oldI][oldJ] = null
-        // console.log("New Potential Board: ", board)
-        // board.forEach((r, i) => {
-        //     r.forEach((sq, j) => {
-        //         if (sq) {
-        //             sq.allMoves()
-        //             possibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
-        //         }
-        //     })
-        // })
+                // board = JSON.parse(oldBoard)
+                console.log("PUT BOARD BACK TO NORMAL")
+                console.log("Board back to normal: ", board)
+                // after the knight makes all of it's moves, the board needs to return to normal 
+                // AND the pieces need to get their moves back to old board
+                findEveryMoveInCheckMate(board)
+            } else {
+                console.log("NO CHECK HERE! MOVE IS POSSIBLE")
+                console.log("NO CHECK HERE! MOVE IS POSSIBLE")
+                console.log("NO CHECK HERE! MOVE IS POSSIBLE")
+                console.log("NO CHECK HERE! MOVE IS POSSIBLE")
+                console.log("THIS IS THE BOARD WHERE NO CHECK EXISTS: ", board)
+                foundEscape = true
+                return true
+            }
+        } else {
+            console.log("Moving Forward...")
+            console.log("Board... ", board)
+        }
+        console.log("JUST RAN FOR EACH, X: ", x)
 
-    })
+    // })
+    }
 
 
     return false
@@ -871,7 +931,7 @@ function movePiece(i, j) {
                 // board = oldBoard
                 board[oldI][oldJ] = state.movingPiece
                 board[i][j] = oldPiece
-                debugger
+                // debugger
                 return
             }
         }
@@ -910,9 +970,10 @@ function findEveryMove(b) {
     b.forEach((r, i) => {
         r.forEach((sq, j) => {
             if (sq) {
-                console.log("SQ MOVES, top of findEveryMove inside forEach: ", sq.moves)
+                // console.log("SQ, top of findEveryMove inside forEach: ", sq)
                 sq.allMoves()
-                state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
+                // state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
+                state.allPossibleMoves.push(sq)
             }
         })
     })
@@ -935,7 +996,8 @@ function findEveryMove(b) {
         e.moves.forEach(m => {
             // console.log(m)
             if (m.piece instanceof King && m.piece.team == 'black') {
-                state.blackCheck.push({ piece: e })
+                // state.blackCheck.push({ piece: e })
+                state.blackCheck.push(e)
             }
 
         })
@@ -945,32 +1007,33 @@ function findEveryMove(b) {
         e.moves.forEach(m => {
             // console.log(m)
             if (m.piece instanceof King && m.piece.team == 'white') {
-                state.whiteCheck.push({ piece: e })
+                // state.whiteCheck.push({ piece: e })
+                state.whiteCheck.push(e)
             }
 
         })
     })
-    let noMoreWhiteCheck = false
-    if (state.whiteCheck.length) {
-        state.whiteMoves.forEach((p, idx) => {
-            // console.log(`${idx}: `, p)
-            // p.moves.forEach(m => {
-            //     console.log(p,m)
-            if (!doesCheckStillExist(p)) {
-                noMoreWhiteCheck = true
-            }
-            // })
-        })
-    }
-    let noMoreBlackCheck = false
-    if (state.blackCheck.length) {
-        state.blackMoves.forEach((p, idx) => {
-            if (!doesCheckStillExist(p)) {
-                noMoreBlackCheck = true
-            }
-        })
-    }
-    console.log("Bottom of findEveryMove function (state.allPossibleMoves): ", state.allPossibleMoves)
+    // let noMoreWhiteCheck = false
+    // if (state.whiteCheck.length) {
+    //     state.whiteMoves.forEach((p, idx) => {
+    //         console.log(`${idx}: `, p)
+    //         // p.moves.forEach(m => {
+    //         //     console.log(p,m)
+    //         if (!doesCheckStillExist(p)) {
+    //             noMoreWhiteCheck = true
+    //         }
+    //         // })
+    //     })
+    // }
+    // let noMoreBlackCheck = false
+    // if (state.blackCheck.length) {
+    //     state.blackMoves.forEach((p, idx) => {
+    //         if (!doesCheckStillExist(p)) {
+    //             noMoreBlackCheck = true
+    //         }
+    //     })
+    // }
+    // console.log("Bottom of findEveryMove function (state.allPossibleMoves): ", state.allPossibleMoves)
 
 
     if (state.blackCheck.length && msg.textContent != "Invalid Move") msg.textContent = "Black is Checked"
@@ -980,6 +1043,97 @@ function findEveryMove(b) {
     if (state.blackCheck.length || state.whiteCheck.length) return { black: state.blackCheck, white: state.whiteCheck }
     else return false
 }
+
+
+
+
+
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE BELOW vvvvvvvvvvv
+
+
+function findEveryMoveInCheckMate(b) {
+    console.log("findEveryMoveInCheckMate is HITTING")
+    let allPotentialMoves = []
+    let allBlackMoves = []
+    let allWhiteMoves = []
+    let blackCheck = []
+    let whiteCheck = []
+    b.forEach((r, i) => {
+        r.forEach((sq, j) => {
+            if (sq) {
+                console.log("SQ, top of findEveryMove inside forEach: ", sq)
+                console.log("SQ MOVES, top of findEveryMove inside forEach: ", sq.moves)
+                sq.allMoves()
+                if(sq instanceof Bishop){
+                    console.log("HERE's THE Bishop!: ", sq)
+                }
+                allPotentialMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
+            }
+        })
+    })
+    allBlackMoves = allPotentialMoves.filter(e => e.team == 'black')
+    allWhiteMoves = allPotentialMoves.filter(e => e.team == 'white')
+
+    console.log('allWhiteMoves: ', allWhiteMoves)
+    console.log('allBlackMoves: ', allBlackMoves)
+    //     NOW THAT WE CAN DETERMINE CHECK:
+    // console.log(state.allPossibleMoves)
+
+    // we need a function that will determine all possible moves AFTER a hypothetical move has been made
+    // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
+    // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
+    // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
+    blackCheck = []
+    whiteCheck = []
+    // if (state.whiteCheck) {
+    //     whiteMoves
+    // }
+    allWhiteMoves.forEach(e => {
+        // console.log(e.moves)
+        e.moves.forEach(m => {
+            console.log('checking if check remains for potential white move')
+            if (m.piece instanceof King && m.piece.team == 'black') {
+                blackCheck.push({ piece: e })
+            }
+            
+        })
+    })
+    allBlackMoves.forEach(e => {
+        // console.log(e.moves)
+        e.moves.forEach(m => {
+            // console.log(m)
+            console.log('checking if check remains for potential black move')
+            if (m.piece instanceof King && m.piece.team == 'white') {
+                whiteCheck.push({ piece: e })
+            }
+
+        })
+    })
+    
+    // if(state.turn === 1 && whiteCheck.length) return whiteCheck
+    // if(state.turn === -1 && whiteCheck.length) return whiteCheck
+    if (blackCheck.length || whiteCheck.length) return { black: blackCheck, white: whiteCheck }
+    else return false
+}
+
+
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+// FIND EVERY POTENTIAL MOVE IN CHECKMATE ABOVE^^^^^^^^^^^^^
+
+
 
 function handleClick(e) {
     // grab indices of selected piece
