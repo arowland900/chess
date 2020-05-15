@@ -1123,9 +1123,30 @@ function findEveryMove(b) {
                             // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
                             if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
                                 if (m instanceof King) {
+                                    console.log("PIECE OF BOARD THAT KING CAN ATTACK: ", board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]])
+                                    if (board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]] instanceof Queen) {
+                                        // state.checkMate = false
+                                        let queenIsProtected = false
+                                        console.log("ANY BLACK MOVES TO DEFEND QUEEN? : ", state.blackMoves)
+                                        for (let bM = 0; bM < state.blackMoves.length; bM++) {
+                                            let curMoves = state.blackMoves[bM].moves
+                                            console.log(curMoves)
 
+                                            for (let c = 0; c < curMoves.length; c++) {
+                                                if (curMoves[c].piece instanceof Queen && curMoves[c].piece.team == 'black') {
+                                                    console.log("Queen is Protected!: ", curMoves[c])
+                                                    queenIsProtected = true
+                                                }
+                                            }
+                                            // if(curMoves.includes())
+                                            // if()
+                                        }
+                                        if (!queenIsProtected) {
+                                            state.checkMate = false
+                                        }
+                                    }
                                 } else {
-                                    
+
                                     console.log("CHECK CAN BE STOPPED!: ", s, m)
                                     state.checkMate = false
                                 }
@@ -1138,7 +1159,7 @@ function findEveryMove(b) {
 
         }
     }
-    if (state.checkMate == undefined) console.log("We have found checkmate")
+    if (state.checkMate == null && (state.whiteCheck.length || state.blackCheck.length)) { console.log("We have found checkmate"); msg.textContent = "CHECKMATE"; return }
     else console.log("State Checkmate: ", state.checkMate)
 
     if (state.blackCheck.length && msg.textContent != "Invalid Move") msg.textContent = "Black is Checked"
