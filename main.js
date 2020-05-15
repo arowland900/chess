@@ -917,33 +917,18 @@ function movePiece(i, j) {
     // if (findEveryMove(board)) {
     findEveryMove(board)
     if(state.whiteCheck.length || state.blackCheck.length){
-        findChecks()
+        // findChecks()
         console.log("HITTING FIND EVERY MOVE BOARD")
         console.log("state.allPossibleMoves: ", state.allPossibleMoves)
         console.log(state.whiteCheck, state.blackCheck)
         if (players[state.turn] == 'white') {
             console.log('check still here, white turn')
-            // let getOutofCheckMoves = []
-
-            // checkmate()
-
             if (state.whiteCheck.length) {
                 console.log("THIS IS STATE.WHITECHECK: ", state.whiteCheck)
                 console.log("THIS IS STATE.WHITECHECK: ", state.allPossibleMoves)
-                // DETERMINE IF ANY MOVE CAN GET YOU OUT OF CHECK
-                // for(let x = 0; x < state.allPossibleMoves.length; x++){
-                //     console.log(state.allPossibleMoves[x])
-                //     let pieceI = state.allPossibleMoves[x].piece.pos.split('')[1]
-                //     let pieceJ = state.allPossibleMoves[x].piece.pos.split('')[3]
-                //     movePiece(pieceI, pieceJ)
-
-                // }
-
-
                 console.log("INVALID MOVE")
                 console.log("All Possible Moves: ", state.allPossibleMoves)
                 msg.textContent = "Invalid Move"
-                // board = oldBoard
                 board[oldI][oldJ] = state.movingPiece
                 board[i][j] = oldPiece
                 // debugger
@@ -952,8 +937,7 @@ function movePiece(i, j) {
         }
         if (players[state.turn] == 'black') {
             console.log('check still here, black turn')
-
-            // DETERMINE IF ANY MOVE CAN GET YOU OUT OF CHECK
+            // IF BLACK IS CHECKED, CAN THIS MOVE GET YOU OUT OF CHECK?
             if (state.blackCheck.length) {
                 console.log("INVALID MOVE")
                 console.log("All Possible Moves: ", state.allPossibleMoves)
@@ -1046,7 +1030,7 @@ function findChecks(){
     console.log("BLACK KING LOC", state.blackKingLoc)
 
     if(state.whiteCheck.length){
-        checkForCheckMate()
+        // checkForCheckMate()
     }
 }
 
@@ -1117,11 +1101,13 @@ function checkForCheckMate(){
                     }
                 }
             } if (p instanceof Knight) {
-                if (whiteKingI - 1 == idx) {
-                    if (whiteKingJ - 2 == jdx) {
 
-                    }
-                }
+            // if knight can be captured (or king can move away), no mate, if not, mate
+                // if (whiteKingI - 1 == idx) {
+                //     if (whiteKingJ - 2 == jdx) {
+
+                //     }
+                // }
             }
             console.log("STATE CHECKBLOCK: ", state.checkBlock, state.checkMate)
 
@@ -1136,6 +1122,7 @@ function checkForCheckMate(){
                         for (let l = 0; l < state.checkBlock[k].length; l++) {
                             // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
                             if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
+                                console.log("THIS IS S SPOT: ", s.spot)
                                 if (m instanceof King) {
                                     let directKingAttack = board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]]
                                     console.log("THIS IS THE KING: ", m)
@@ -1163,6 +1150,7 @@ function checkForCheckMate(){
                                         }
                                     }
                                 } else {
+                                    // need to check here to see if this move is valid
 
                                     console.log("CHECK CAN BE STOPPED!: ", s, m)
                                     state.checkMate = false
@@ -1179,10 +1167,10 @@ function checkForCheckMate(){
     if (state.checkMate == null && (state.whiteCheck.length || state.blackCheck.length)) { console.log("We have found checkmate"); msg.textContent = "CHECKMATE"; return }
     else console.log("State Checkmate: ", state.checkMate)
 
-    if (state.blackCheck.length && msg.textContent != "Invalid Move") msg.textContent = "Black is Checked"
-    else if (state.whiteCheck.length && msg.textContent != "Invalid Move") msg.textContent = "White is Checked"
-    else if (msg.textContent == "Invalid Move") { msg.textContent != "Invalid Move"; console.log(msg) }
-    else msg.textContent = "Chess"
+    if (state.blackCheck.length && msg.textContent != "Invalid Move"){  msg.textContent = "Black is Checked"; return}
+    else if (state.whiteCheck.length && msg.textContent != "Invalid Move") { msg.textContent = "White is Checked"; return}
+    else if (msg.textContent == "Invalid Move") { msg.textContent != "Invalid Move"; console.log(msg); return }
+    else msg.textContent = "Chess";  
     if (state.blackCheck.length || state.whiteCheck.length) return { black: state.blackCheck, white: state.whiteCheck }
     else return false
 }
@@ -1336,7 +1324,7 @@ function handleClick(e) {
     }
     console.log('about to hit findEveryMove in HandleClick Func')
     findEveryMove(board)
-    findChecks()
+    // findChecks()
     renderBoard()
 }
 
@@ -1362,5 +1350,12 @@ function renderBoard() {
             gameBoard.appendChild(square)
         })
     })
+    if(!state.whiteCheck.length && !state.whiteCheck.length){
+        msg.textContent = `Chess! - Turn: ${players[state.turn]}`
+    } else if(state.whiteCheck.length){
+        msg.textContent = `white is in check!`
+    } else {
+        msg.textContent = `black is in check!`
+    }
 }
 
