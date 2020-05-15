@@ -914,7 +914,10 @@ function movePiece(i, j) {
     // }
     // new check logic above
     console.log('about to hit findEveryMove in MovePiece Func')
-    if (findEveryMove(board)) {
+    // if (findEveryMove(board)) {
+    findEveryMove(board)
+    if(state.whiteCheck.length || state.blackCheck.length){
+        findChecks()
         console.log("HITTING FIND EVERY MOVE BOARD")
         console.log("state.allPossibleMoves: ", state.allPossibleMoves)
         console.log(state.whiteCheck, state.blackCheck)
@@ -1333,6 +1336,7 @@ function handleClick(e) {
     }
     console.log('about to hit findEveryMove in HandleClick Func')
     findEveryMove(board)
+    findChecks()
     renderBoard()
 }
 
