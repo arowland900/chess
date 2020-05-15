@@ -106,7 +106,6 @@ class Pawn extends Piece {
                 this.moves.push({ spot: [i - 1, j + 1], piece: board[i - 1][j + 1] })
             }
             if (i == 6) {
-                console.log("HITTING: ", i)
                 if (board[i - 2][j] == null) {
                     // console.log("two space up pawn")
                     this.moves.push({ spot: [i - 2, j], piece: board[i - 2][j] })
@@ -1069,10 +1068,10 @@ function findEveryMove(b) {
                         state.checkBlock[0].push([idx, jdx])
                         idx++
                     }
-                } 
+                }
             }
-            if(p instanceof Queen || p instanceof Bishop || p instanceof Knight){
-                if(whiteKingI != idx && whiteKingJ != jdx) {
+            if (p instanceof Queen || p instanceof Bishop || p instanceof Knight) {
+                if (whiteKingI != idx && whiteKingJ != jdx) {
                     if (whiteKingI < idx) {
                         if (whiteKingJ < jdx) {
                             while (whiteKingI < idx) {
@@ -1117,8 +1116,12 @@ function findEveryMove(b) {
                         for (let l = 0; l < state.checkBlock[k].length; l++) {
                             // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
                             if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
-                                console.log("CHECK CAN BE STOPPED!: ", s, m)
-                                state.checkMate = false
+                                if (m instanceof King) {
+                                    
+                                } else {
+                                    console.log("CHECK CAN BE STOPPED!: ", s, m)
+                                    state.checkMate = false
+                                }
                             }
                         }
                     }
