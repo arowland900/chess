@@ -1038,7 +1038,7 @@ function findEveryMove(b) {
     console.log("BLACK KING LOC", blackKingLoc)
 
     if (state.whiteCheck.length) {
-
+        state.checkMate = undefined
         let whiteKingI = Number(whiteKingLoc.pos.split('')[1])
         let whiteKingJ = Number(whiteKingLoc.pos.split('')[3])
         let rowOne = []
@@ -1070,7 +1070,7 @@ function findEveryMove(b) {
                     }
                 }
             }
-            if (p instanceof Queen || p instanceof Bishop || p instanceof Knight) {
+            if (p instanceof Queen || p instanceof Bishop || p instanceof Pawn) {
                 if (whiteKingI != idx && whiteKingJ != jdx) {
                     if (whiteKingI < idx) {
                         if (whiteKingJ < jdx) {
@@ -1102,8 +1102,14 @@ function findEveryMove(b) {
                         }
                     }
                 }
+            } if (p instanceof Knight) {
+                if (whiteKingI - 1 == idx) {
+                    if (whiteKingJ - 2 == jdx) {
+
+                    }
+                }
             }
-            console.log("STATE CHECKBLOCK: ", state.checkBlock)
+            console.log("STATE CHECKBLOCK: ", state.checkBlock, state.checkMate)
 
             for (let ii = 0; ii < state.whiteMoves.length; ii++) {
                 let m = state.whiteMoves[ii]
@@ -1117,8 +1123,9 @@ function findEveryMove(b) {
                             // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
                             if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
                                 if (m instanceof King) {
-                                    
+
                                 } else {
+                                    
                                     console.log("CHECK CAN BE STOPPED!: ", s, m)
                                     state.checkMate = false
                                 }
