@@ -1124,6 +1124,7 @@ function findEveryMove(b) {
                             if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
                                 if (m instanceof King) {
                                     let directKingAttack = board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]]
+                                    console.log("THIS IS THE KING: ", m)
                                     console.log("PIECE OF BOARD THAT KING CAN ATTACK: ", directKingAttack)
                                     if (directKingAttack != null) {
                                         // state.checkMate = false
