@@ -26,7 +26,9 @@ let state = {
     whiteMoves: [],
     blackMoves: [],
     checkBlock: [],
-    checkMate: null
+    checkMate: null,
+    whiteKingLoc: undefined,
+    blackKingLoc: undefined
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
@@ -978,15 +980,15 @@ function movePiece(i, j) {
 function findEveryMove(b) {
     state.allPossibleMoves = []
     state.checkBlock = []
-    let whiteKingLoc;
-    let blackKingLoc;
+    // let whiteKingLoc;
+    // let blackKingLoc;
     b.forEach((r, i) => {
         r.forEach((sq, j) => {
             if (sq) {
                 // console.log("SQ, top of findEveryMove inside forEach: ", sq)
                 sq.allMoves()
                 if (sq instanceof King) {
-                    sq.team == 'white' ? whiteKingLoc = sq : blackKingLoc = sq
+                    sq.team == 'white' ? state.whiteKingLoc = sq : state.blackKingLoc = sq
                 }
                 // state.allPossibleMoves.push({ team: sq.team, piece: sq, moves: sq.moves })
                 state.allPossibleMoves.push(sq)
@@ -997,11 +999,14 @@ function findEveryMove(b) {
     state.whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
     //     NOW THAT WE CAN DETERMINE CHECK:
     console.log(state.allPossibleMoves)
-
     // we need a function that will determine all possible moves AFTER a hypothetical move has been made
     // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
     // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
     // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
+    findChecks()
+}
+
+function findChecks(){
     state.blackCheck = []
     state.whiteCheck = []
     // if (state.whiteCheck) {
@@ -1034,13 +1039,19 @@ function findEveryMove(b) {
     console.log("STATE AL POSSIBLE MOVES: ", state.allPossibleMoves)
     console.log("WHITE CHECK", state.whiteCheck)
     console.log("BLACK CHECK", state.blackCheck)
-    console.log("WHITE KING LOC", whiteKingLoc)
-    console.log("BLACK KING LOC", blackKingLoc)
+    console.log("WHITE KING LOC", state.whiteKingLoc)
+    console.log("BLACK KING LOC", state.blackKingLoc)
 
+    if(state.whiteCheck.length){
+        checkForCheckMate()
+    }
+}
+
+function checkForCheckMate(){
     if (state.whiteCheck.length) {
         state.checkMate = undefined
-        let whiteKingI = Number(whiteKingLoc.pos.split('')[1])
-        let whiteKingJ = Number(whiteKingLoc.pos.split('')[3])
+        let whiteKingI = Number(state.whiteKingLoc.pos.split('')[1])
+        let whiteKingJ = Number(state.whiteKingLoc.pos.split('')[3])
         let rowOne = []
         state.checkBlock.push(rowOne)
         for (let i = 0; i < state.whiteCheck.length; i++) {
