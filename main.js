@@ -1,21 +1,16 @@
 console.log("JS LOADED")
 
+
 /*----- constants -----*/
-// const icons = {
-//     Pawn: '♟',
-//     Knight: '♞',
-//     Bishop: '♝',
-//     Rook: '♜',
-//     Queen: '♛',
-//     King: '♚'
-// }
+const letterLookup = ['a','b','c','d','e','f','g','h'].reverse()
 const players = {
     '1': 'white',
     '-1': 'black'
 }
 /*----- state -----*/
+let board;
+
 let state = {
-    board: null,
     turn: 1,
     movingPiece: null,
     selectedSquare: null,
@@ -29,7 +24,7 @@ let state = {
     checkMate: null,
     whiteKingLoc: undefined,
     blackKingLoc: undefined,
-    invalidMove: false
+    invalidMove: undefined
 }
 /*----- cached elements -----*/
 let gameBoard = document.getElementById('board')
@@ -789,6 +784,7 @@ init()
 
 function init() {
     state.turn = 1
+    console.log("BOARD: ", board)
     board = new Array(8).fill(new Array(8).fill(null))
 
     board = board.map((row, i) => {
@@ -818,7 +814,7 @@ function init() {
 
 
 function movePiece(i, j) {
-    state.invalidMove = false
+    state.invalidMove = undefined
     console.log("Top of movePiece: ", state.movingPiece, state.selectedSquare, i, j)
     let oldPiece = board[i][j]
     board[i][j] = state.movingPiece
@@ -841,7 +837,7 @@ function movePiece(i, j) {
 }
 
 function doesMoveResultInCheck(i, j, oldI, oldJ, oldPiece) {
-    console.log("HITTING FIND EVERY MOVE BOARD")
+    console.log("Hitting doesMoveResultInCheck. state movingpiece: ", state.movingPiece)
     console.log("state.allPossibleMoves: ", state.allPossibleMoves)
     console.log(state.whiteCheck, state.blackCheck)
     if (players[state.turn] == 'white' && state.whiteCheck.length) {
@@ -850,7 +846,7 @@ function doesMoveResultInCheck(i, j, oldI, oldJ, oldPiece) {
             console.log("THIS IS STATE.WHITECHECK: ", state.allPossibleMoves)
             console.log("INVALID MOVE")
             console.log("All Possible Moves: ", state.allPossibleMoves)
-            state.invalidMove = true
+            state.invalidMove = {i, j, name: state.movingPiece.constructor.toString().split(' ')[1]}
             board[oldI][oldJ] = state.movingPiece
             board[i][j] = oldPiece
             // debugger
@@ -863,7 +859,7 @@ function doesMoveResultInCheck(i, j, oldI, oldJ, oldPiece) {
         if (state.blackCheck.length) {
             console.log("INVALID MOVE")
             console.log("All Possible Moves: ", state.allPossibleMoves)
-            state.invalidMove = true
+            state.invalidMove = {i, j, name: state.movingPiece.constructor.toString().split(' ')[1]}
 
             board[oldI][oldJ] = state.movingPiece
             board[i][j] = oldPiece
@@ -898,28 +894,20 @@ function findEveryMove(b) {
     state.whiteMoves = state.allPossibleMoves.filter(e => e.team == 'white')
     //     NOW THAT WE CAN DETERMINE CHECK:
     console.log("ALL POSSIBLE MOVES: ", state.allPossibleMoves)
-    // we need a function that will determine all possible moves AFTER a hypothetical move has been made
-    // if that hypothetical move is made & a check is no longer present, the hypothetical move is valid.
-    // if that hypothetical move is made & there is still a check for that same player, the move is invalid.
-    // if ALL hypothetical moves are unable to get rid of check, we have found checkmate!
     findChecks()
 }
 
 function findChecks() {
     state.blackCheck = []
     state.whiteCheck = []
-    // if (state.whiteCheck) {
-    //     whiteMoves
-    // }
+
     state.whiteMoves.forEach(e => {
         // console.log(e.moves)
         e.moves.forEach(m => {
             // console.log(m)
             if (m.piece instanceof King && m.piece.team == 'black') {
-                // state.blackCheck.push({ piece: e })
                 state.blackCheck.push(e)
             }
-
         })
     })
     state.blackMoves.forEach(e => {
@@ -927,13 +915,11 @@ function findChecks() {
         e.moves.forEach(m => {
             // console.log(m)
             if (m.piece instanceof King && m.piece.team == 'white') {
-                // state.whiteCheck.push({ piece: e })
                 state.whiteCheck.push(e)
             }
-
         })
     })
-    
+
     console.log("WHITE CHECK", state.whiteCheck)
     console.log("BLACK CHECK", state.blackCheck)
     console.log("WHITE KING LOC", state.whiteKingLoc)
@@ -1106,7 +1092,9 @@ function handleClick(e) {
             console.log("STATE MOVING PIECE :", state.movingPiece)
             if (state.movingPiece && state.movingPiece.checkMove()) {
                 movePiece(i, j)
+                findEveryMove(board)
             } else {
+                // state.invalidMove = {i,j,name: state.movingPiece.constructor.toString().split(' ')[1]}
                 console.log("Not your turn :(", attemptedSelect, state.movingPiece)
             }
         }
@@ -1115,13 +1103,15 @@ function handleClick(e) {
         if (state.movingPiece && !attemptedSelect) {
             if (state.movingPiece.checkMove()) {
                 movePiece(i, j)
+                findEveryMove(board)
             } else {
                 console.log("Invalid move, please try again!")
+                // state.invalidMove = {i,j,name: state.movingPiece.constructor.toString().split(' ')[1]}
             }
         }
     }
     console.log('about to hit findEveryMove in HandleClick Func')
-    findEveryMove(board)
+    // findEveryMove(board)
     // findChecks()
     renderBoard()
 }
@@ -1157,7 +1147,15 @@ function renderBoard() {
         msg.textContent = `black is in check!`
     }
     if(state.invalidMove){
-        msg.textContent = 'invalid move'
+        console.log(state.invalidMove)
+        if(state.whiteCheck.length){
+            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.i - 1]}${state.invalidMove.j+1} is invalid. White king is checked`
+        } else if(state.blackCheck.length){
+            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.i - 1]}${state.invalidMove.j+1} is invalid. Black king is checked`
+        } else {
+            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.i - 1]}${state.invalidMove.j+1} is invalid.`
+
+        }
     }
 }
 
