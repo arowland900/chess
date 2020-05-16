@@ -1027,14 +1027,34 @@ function checkForCheckMate(){
 
             for(let k = 0; k < state.checkBlock.length; k++){
                 console.log("STRINGIFY CHECKBLOCK AT K ", k, JSON.stringify(state.checkBlock[k]))
-                console.log(" WHITEMOVES AT J ", j, state.whiteMoves[i].moves[k].spot)
-                if(JSON.stringify(state.checkBlock[k]).includes(state.whiteMoves[i].moves[k].spot)){
+                console.log("PIECE BEING LOOKED AT: ", state.whiteMoves[i])
+                console.log(" WHITEMOVES AT J ", j, state.whiteMoves[i].moves[j].spot)
+                if(JSON.stringify(state.checkBlock[k]).includes(state.whiteMoves[i].moves[j].spot)){
                     console.log("INCLUDED! ", state.whiteMoves[i].moves[k])
                     console.log("PIECE: ", state.whiteMoves[i])
                     if(state.whiteMoves[i] instanceof King){
+                        console.log("WE've FOUND KING INSTANCE")
+                        // THIS IS THE LAST PART, CHECK FOR KING 
+                        // if the king is the piece that can potentially block the check
+                        // determine if the king can capture the piece checking
+                        // if not, determine if the king can move out of check (into a safe spot)
+                        // if not, checkmate!
+                        state.whiteMoves[i].moves.forEach(m => {
+                            console.log(m)
+                        })
+
+                        // EVEN IF this occurs, we still need to make sure that there are
+                        // no other pieces that can intercept check 
+                        // ( i suppose the best way to do this would to be not putting a return statement
+                        // in this if block, so that if it ever hits the else after it will set 
+                        // state.checkMate back to false)
+
+
 
                     } else {
                         state.checkMate = false
+                        console.log('state checkMate: ', state.checkMate)
+                        return
                     }
                 }
 
@@ -1043,6 +1063,9 @@ function checkForCheckMate(){
         }
 
     }
+    state.checkMate = true
+    console.log('state checkMate: ', state.checkMate)
+    return
 }
 /////////////////////////////////////////////////////
 // function checkForCheckMate() {
