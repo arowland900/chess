@@ -21,7 +21,7 @@ let state = {
     whiteMoves: [],
     blackMoves: [],
     checkBlock: [],
-    checkMate: null,
+    checkMate: false,
     whiteKingLoc: undefined,
     blackKingLoc: undefined,
     invalidMove: undefined
@@ -926,15 +926,17 @@ function findChecks() {
     console.log("BLACK KING LOC", state.blackKingLoc)
 
     if (state.whiteCheck.length) {
-        // checkForCheckMate()
-    }
+        // checkForCheckMate(state.whiteKingLoc)
+    } else if(state.blackCheck.length){
+        // checkForCheckMate(state.blackKingLoc)
+    } 
 }
 
-function checkForCheckMate() {
-    if (state.whiteCheck.length) {
-        state.checkMate = undefined
-        let whiteKingI = Number(state.whiteKingLoc.pos.split('')[1])
-        let whiteKingJ = Number(state.whiteKingLoc.pos.split('')[3])
+function checkForCheckMate(king) {
+    // if (state.whiteCheck.length) {
+        state.checkMate = true
+        let kingI = Number(king.pos.split('')[1])
+        let kingJ = Number(king.pos.split('')[3])
         let rowOne = []
         state.checkBlock.push(rowOne)
         for (let i = 0; i < state.whiteCheck.length; i++) {
@@ -944,51 +946,51 @@ function checkForCheckMate() {
 
             if (p instanceof Queen || p instanceof Rook) {
                 // console.log("PIECE CHECKING KING IS QUEEN")
-                if (whiteKingI == idx) {
-                    while (jdx > whiteKingJ) {
+                if (kingI == idx) {
+                    while (jdx > kingJ) {
                         state.checkBlock[0].push([idx, jdx])
                         jdx--
                     }
-                    while (jdx < whiteKingJ) {
+                    while (jdx < kingJ) {
                         state.checkBlock[0].push([idx, jdx])
                         jdx++
                     }
-                } else if (whiteKingJ == jdx) {
-                    while (idx > whiteKingI) {
+                } else if (kingJ == jdx) {
+                    while (idx > kingI) {
                         state.checkBlock[0].push([idx, jdx])
                         idx--
                     }
-                    while (idx < whiteKingI) {
+                    while (idx < kingI) {
                         state.checkBlock[0].push([idx, jdx])
                         idx++
                     }
                 }
             }
             if (p instanceof Queen || p instanceof Bishop || p instanceof Pawn) {
-                if (whiteKingI != idx && whiteKingJ != jdx) {
-                    if (whiteKingI < idx) {
-                        if (whiteKingJ < jdx) {
-                            while (whiteKingI < idx) {
+                if (kingI != idx && kingJ != jdx) {
+                    if (kingI < idx) {
+                        if (kingJ < jdx) {
+                            while (kingI < idx) {
                                 state.checkBlock[0].push([idx, jdx])
                                 idx--
                                 jdx--
                             }
                         } else {
-                            while (whiteKingI < idx) {
+                            while (kingI < idx) {
                                 state.checkBlock[0].push([idx, jdx])
                                 idx--
                                 jdx++
                             }
                         }
                     } else {
-                        if (whiteKingJ < jdx) {
-                            while (whiteKingI > idx) {
+                        if (kingJ < jdx) {
+                            while (kingI > idx) {
                                 state.checkBlock[0].push([idx, jdx])
                                 idx++
                                 jdx--
                             }
                         } else {
-                            while (whiteKingI > idx) {
+                            while (kingI > idx) {
                                 state.checkBlock[0].push([idx, jdx])
                                 idx++
                                 jdx++
@@ -999,8 +1001,8 @@ function checkForCheckMate() {
             } if (p instanceof Knight) {
 
                 // if knight can be captured (or king can move away), no mate, if not, mate
-                // if (whiteKingI - 1 == idx) {
-                //     if (whiteKingJ - 2 == jdx) {
+                // if (kingI - 1 == idx) {
+                //     if (kingJ - 2 == jdx) {
 
                 //     }
                 // }
@@ -1059,7 +1061,7 @@ function checkForCheckMate() {
 
 
         }
-    }
+    // }
     if (state.checkMate == null && (state.whiteCheck.length || state.blackCheck.length)) { console.log("We have found checkmate"); msg.textContent = "CHECKMATE"; return }
     else console.log("State Checkmate: ", state.checkMate)
 
@@ -1140,11 +1142,11 @@ function renderBoard() {
     })
 
     if (!state.whiteCheck.length && !state.whiteCheck.length) {
-        msg.textContent = `Chess! - Turn: ${players[state.turn]}`
+        msg.textContent = `Chess! - Turn: ${players[state.turn].charAt(0).toUpperCase()}${players[state.turn].slice(1) }`
     } else if (state.whiteCheck.length) {
-        msg.textContent = `white is in check!`
+        state.checkMate ? msg.textContent = `CHECKMATE!` : msg.textContent = `White is in check!`
     } else {
-        msg.textContent = `black is in check!`
+        state.checkMate ? msg.textContent = `CHECKMATE!` : msg.textContent = `Black is in check!`
     }
     if(state.invalidMove){
         console.log(state.invalidMove)
