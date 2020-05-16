@@ -2,7 +2,7 @@ console.log("JS LOADED")
 
 
 /*----- constants -----*/
-const letterLookup = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+const letterLookup = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].reverse()
 const players = {
     '1': 'white',
     '-1': 'black'
@@ -1017,21 +1017,24 @@ function buildCheckBlock(king) {
     checkForCheckMate()
 }
 /////////////////////////////////////////////////////
-console.log("STATE CHECKBLOCK: ", state.checkBlock, state.checkMate)
 function checkForCheckMate() {
-    for (let ii = 0; ii < state.whiteMoves.length; ii++) {
-        let m = state.whiteMoves[ii]
-        for (let jj = 0; jj < m.moves.length; jj++) {
-            let s = m.moves[jj]
-
-            // console.log(`${jj}: `, s)
+    console.log("STATE CHECKBLOCK: ", state.checkBlock, state.checkMate)
+    for (let i = 0; i < state.whiteMoves.length; i++) {
+        let m = state.whiteMoves[i]
+        console.log("THIS IS M: ", m)
+        for (let j = 0; j < m.moves.length; j++) {
+            let s = m.moves[j]
+            console.log(`THIS IS S At ${j}: `, s)
             for (let k = 0; k < state.checkBlock.length; k++) {
+                console.log("THIS IS STATE.CHECKBLOCK: ", state.checkBlock)
                 // console.log("STATE CHECKBLOCK K: ", state.checkBlock[k])
                 for (let l = 0; l < state.checkBlock[k].length; l++) {
                     // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
                     if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
+                        // IF THIS IS TRUE, A PIECE HAS THE CAPABILITY TO INTERCEPT CHECK
                         console.log("THIS IS S SPOT: ", s.spot)
                         if (m instanceof King) {
+                            // IF THIS IS TRUE, THAT PIECE WITH INTERCEPT CAPABILITY IS A KING
                             let directKingAttack = board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]]
                             console.log("THIS IS THE KING: ", m)
                             console.log("PIECE OF BOARD THAT KING CAN ATTACK: ", directKingAttack)
@@ -1071,17 +1074,6 @@ function checkForCheckMate() {
 
 
 }
-// }
-// if (state.checkMate == null && (state.whiteCheck.length || state.blackCheck.length)) { console.log("We have found checkmate"); msg.textContent = "CHECKMATE"; return }
-// else console.log("State Checkmate: ", state.checkMate)
-
-    // if (state.blackCheck.length && msg.textContent != "Invalid Move"){  msg.textContent = "Black is Checked"; return}
-    // else if (state.whiteCheck.length && msg.textContent != "Invalid Move") { msg.textContent = "White is Checked"; return}
-    // else if (msg.textContent == "Invalid Move") { msg.textContent != "Invalid Move"; console.log(msg); return }
-    // else msg.textContent = "Chess";  
-    // if (state.blackCheck.length || state.whiteCheck.length) return { black: state.blackCheck, white: state.whiteCheck }
-    // else return false
-
 
 
 
@@ -1161,11 +1153,11 @@ function renderBoard() {
     if (state.invalidMove) {
         console.log(state.invalidMove)
         if (state.whiteCheck.length) {
-            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.j +1]}${state.invalidMove.i +1} is invalid. White king is checked`
+            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.j ]}${state.invalidMove.i +1} is invalid. White king is checked`
         } else if (state.blackCheck.length) {
-            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.j+1]}${state.invalidMove.i +1} is invalid. Black king is checked`
+            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.j]}${state.invalidMove.i +1} is invalid. Black king is checked`
         } else {
-            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.j+1]}${state.invalidMove.i +1} is invalid.`
+            msg.textContent = `${state.invalidMove.name} ${letterLookup[state.invalidMove.j]}${state.invalidMove.i +1} is invalid.`
 
         }
     }
