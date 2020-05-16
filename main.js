@@ -1014,66 +1014,94 @@ function buildCheckBlock(king) {
         }
 
     }
+    console.log("bottom of buildCheckBlock function: ", state.whiteMoves)
     checkForCheckMate()
 }
-/////////////////////////////////////////////////////
-function checkForCheckMate() {
-    console.log("STATE CHECKBLOCK: ", state.checkBlock, state.checkMate)
-    for (let i = 0; i < state.whiteMoves.length; i++) {
-        let m = state.whiteMoves[i]
-        console.log("THIS IS M: ", m)
-        for (let j = 0; j < m.moves.length; j++) {
-            let s = m.moves[j]
-            console.log(`THIS IS S At ${j}: `, s)
-            for (let k = 0; k < state.checkBlock.length; k++) {
-                console.log("THIS IS STATE.CHECKBLOCK: ", state.checkBlock)
-                // console.log("STATE CHECKBLOCK K: ", state.checkBlock[k])
-                for (let l = 0; l < state.checkBlock[k].length; l++) {
-                    // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
-                    if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
-                        // IF THIS IS TRUE, A PIECE HAS THE CAPABILITY TO INTERCEPT CHECK
-                        console.log("THIS IS S SPOT: ", s.spot)
-                        if (m instanceof King) {
-                            // IF THIS IS TRUE, THAT PIECE WITH INTERCEPT CAPABILITY IS A KING
-                            let directKingAttack = board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]]
-                            console.log("THIS IS THE KING: ", m)
-                            console.log("PIECE OF BOARD THAT KING CAN ATTACK: ", directKingAttack)
-                            if (directKingAttack != null) {
-                                // state.checkMate = false
-                                let queenIsProtected = false
-                                console.log("ANY BLACK MOVES TO DEFEND PIECE? : ", state.blackMoves)
-                                for (let bM = 0; bM < state.blackMoves.length; bM++) {
-                                    let curMoves = state.blackMoves[bM].moves
-                                    console.log(curMoves)
 
-                                    for (let c = 0; c < curMoves.length; c++) {
-                                        // if (curMoves[c].piece instanceof Queen && curMoves[c].piece.team == 'black') {
-                                        if (curMoves[c].piece == directKingAttack) {
-                                            console.log("PIECE is Protected!: ", curMoves[c])
-                                            queenIsProtected = true
-                                        }
-                                    }
-                                    // if(curMoves.includes())
-                                    // if()
-                                }
-                                if (!queenIsProtected) {
-                                    state.checkMate = false
-                                }
-                            }
-                        } else {
-                            // need to check here to see if this move is valid
+function checkForCheckMate(){
+    console.log("HITTING checkForCheckMate")
+    for(let i = 0; i < state.whiteMoves.length; i++){
+        
+        // console.log(state.whiteMoves[i])
+        for(let j = 0; j < state.whiteMoves[i].moves.length; j++){
 
-                            console.log("CHECK CAN BE STOPPED!: ", s, m)
-                            state.checkMate = false
-                        }
+            for(let k = 0; k < state.checkBlock.length; k++){
+                console.log("STRINGIFY CHECKBLOCK AT K ", k, JSON.stringify(state.checkBlock[k]))
+                console.log(" WHITEMOVES AT J ", j, state.whiteMoves[i].moves[k].spot)
+                if(JSON.stringify(state.checkBlock[k]).includes(state.whiteMoves[i].moves[k].spot)){
+                    console.log("INCLUDED! ", state.whiteMoves[i].moves[k])
+                    console.log("PIECE: ", state.whiteMoves[i])
+                    if(state.whiteMoves[i] instanceof King){
+
+                    } else {
+                        state.checkMate = false
                     }
                 }
+
             }
+
         }
+
     }
-
-
 }
+/////////////////////////////////////////////////////
+// function checkForCheckMate() {
+//     console.log("STATE CHECKBLOCK: ", state.checkBlock, state.checkMate)
+//     for (let i = 0; i < state.whiteMoves.length; i++) {
+//         let m = state.whiteMoves[i]
+//         console.log("THIS IS M: ", m)
+//         for (let j = 0; j < m.moves.length; j++) {
+//             let s = m.moves[j]
+//             console.log(`THIS IS S At ${j}: `, s)
+//             for (let k = 0; k < state.checkBlock.length; k++) {
+//                 console.log("THIS IS STATE.CHECKBLOCK: ", state.checkBlock)
+//                 // console.log("STATE CHECKBLOCK K: ", state.checkBlock[k])
+//                 for (let l = 0; l < state.checkBlock[k].length; l++) {
+//                     // console.log("STATE CHECKBLOCK @ 0: ", state.checkBlock[k][l])
+//                     if (s.spot == JSON.stringify(state.checkBlock[k][l])) {
+//                         // IF THIS IS TRUE, A PIECE HAS THE CAPABILITY TO INTERCEPT CHECK
+//                         console.log("THIS IS S SPOT: ", s.spot)
+//                         if (m instanceof King) {
+//                             // IF THIS IS TRUE, THAT PIECE WITH INTERCEPT CAPABILITY IS A KING
+//                             let directKingAttack = board[state.checkBlock[k][l][0]][state.checkBlock[k][l][1]]
+//                             console.log("THIS IS THE KING: ", m)
+//                             console.log("PIECE OF BOARD THAT KING CAN ATTACK: ", directKingAttack)
+//                             if (directKingAttack != null) {
+//                                 // state.checkMate = false
+//                                 let queenIsProtected = false
+//                                 console.log("ANY BLACK MOVES TO DEFEND PIECE? : ", state.blackMoves)
+//                                 for (let bM = 0; bM < state.blackMoves.length; bM++) {
+//                                     let curMoves = state.blackMoves[bM].moves
+//                                     console.log(curMoves)
+
+//                                     for (let c = 0; c < curMoves.length; c++) {
+//                                         // if (curMoves[c].piece instanceof Queen && curMoves[c].piece.team == 'black') {
+//                                         if (curMoves[c].piece == directKingAttack) {
+//                                             console.log("PIECE is Protected!: ", curMoves[c])
+//                                             queenIsProtected = true
+//                                         }
+//                                     }
+//                                     // if(curMoves.includes())
+//                                     // if()
+//                                 }
+//                                 if (!queenIsProtected) {
+//                                     state.checkMate = false
+//                                 }
+//                             }
+//                         } else {
+//                             // need to check here to see if this move is valid
+
+//                             console.log("CHECK CAN BE STOPPED!: ", s, m)
+//                             state.checkMate = false
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+
+// }
 
 
 
