@@ -1303,5 +1303,6 @@ function renderBoard() {
 
         }
     }
+    if(state.checkMate) gameBoard.removeEventListener('click', handleClick)
 }
 
