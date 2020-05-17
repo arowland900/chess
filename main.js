@@ -1063,7 +1063,7 @@ function checkForCheckMate(){
                     if(state.whiteMoves[i] instanceof King){
                         state.kingLook = 'white'
                         console.log("WE've FOUND KING INSTANCE")
-                        console.log("IS KING LAST MOVE IN WHITEMOVES? :", i == state.whitemoves.length -1)
+                        console.log("IS KING LAST MOVE IN WHITEMOVES? :", i == state.whiteMoves.length -1)
                         // THIS IS THE LAST PART, CHECK FOR KING 
                         // if the king is the piece that can potentially block the check
                         // determine if the king can capture the piece checking
@@ -1113,6 +1113,11 @@ function checkForCheckMate(){
                                     }
                                 }
                                 console.log("HOW MANY KING MOVES LEFT: ", numOfKingMoves)
+                                if(numOfKingMoves == 0){
+                                    state.checkMate = true
+                                } else {
+                                    state.checkMate = false
+                                }
                             }
 
                         }
@@ -1142,7 +1147,7 @@ function checkForCheckMate(){
         }
 
     }
-    state.checkMate = true
+    // state.checkMate = true
     console.log('state checkMate: ', state.checkMate)
     return
 }
