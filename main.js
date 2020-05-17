@@ -1033,27 +1033,120 @@ function buildCheckBlock(king) {
     // ONLY WAY TO ESCAPE CHECK IS FOR KING TO MOVE TO FREE SPACE
 
     // IF THERE IS OVERLAP, TURN STATE.CHECKBLOCK INTO THOSE OVERLAPPING SPOTS
-
-    let result = state.checkBlock.shift().reduce(function(res, v) {
-        if (res.indexOf(v) === -1 && state.checkBlock.every(function(a) {
-            return a.indexOf(v) !== -1;
-        })) res.push(v);
-        return res;
-    }, []);
-
-    state.checkBlock = result
+    if (state.checkBlock.length > 1) {
+        let result = state.checkBlock.shift().reduce(function (res, v) {
+            if (res.indexOf(v) === -1 && state.checkBlock.every(function (a) {
+                return a.indexOf(v) !== -1;
+            })) res.push(v);
+            return res;
+        }, []);
+        state.checkBlock = result
+    }
 
     console.log("bottom of buildCheckBlock function: ", state.whiteMoves)
-    checkForCheckMate()
+    if (state.whiteCheck.length) {
+        checkForCheckMate()
+    } else if (state.blackCheck.length) {
+        checkForCheckMate()
+    }
+}
+
+function kingEscape(king) {
+    state.kingLook = 'white'
+    console.log("WE've FOUND KING INSTANCE")
+    // console.log("IS KING LAST MOVE IN WHITEMOVES? :", i == state.whiteMoves.length - 1)
+    // THIS IS THE LAST PART, CHECK FOR KING 
+    // if the king is the piece that can potentially block the check
+    // determine if the king can capture the piece checking
+    // if not, determine if the king can move out of check (into a safe spot)
+    // if not, checkmate!
+
+
+    // see which moves the king can ACTUALLY make within it's moves array
+    let allKingMoves = king.moves
+    let numOfKingMoves = allKingMoves.length
+    let spotsChecked = []
+    allKingMoves.forEach(m => {
+        if (m.piece != null && m.piece.team == 'white') {
+            numOfKingMoves -= 1
+        }
+    })
+    console.log("ALL OF THE KING's POSSIBLE MOVES: ", allKingMoves)
+
+
+    for (let x = 0; x < king.moves.length; x++) {
+        // state.checkMate = true
+        let m = king.moves[x]
+        // king.moves.forEach((m, x) => {
+        // let [newI,newJ] = JSON.parse(m.spot)
+        console.log(m.spot)
+        console.log(state.kingLook)
+        // state.movingPiece = king
+        // console.log("STATE MOVING PIECE: :",state.movingPiece)
+        // movePiece(newI, newJ)
+        console.log("STATE BLACK MOVES, to see if king can evade check: ", state.blackMoves)
+
+        for (let blackMoveIdx = 0; blackMoveIdx < state.blackMoves.length; blackMoveIdx++) {
+            console.log(`BLACK PIECE MOVES ${blackMoveIdx}`, state.blackMoves[blackMoveIdx])
+            for (let oneMove = 0; oneMove < state.blackMoves[blackMoveIdx].moves.length; oneMove++) {
+                let individualMove = state.blackMoves[blackMoveIdx].moves[oneMove].spot
+                // console.log('EACH INDIVIDUAL BLACK MOVE: ',state.blackMoves[blackMoveIdx].moves[oneMove])
+                console.log("INDIVIDUAL MOVE: ", individualMove)
+                if (m.spot == individualMove) {
+                    console.log("FOUND M SPOT = INDIV MOVE")
+                    if (!spotsChecked.includes(individualMove)) {
+                        let [checkI, checkJ] = JSON.parse(individualMove)
+                        if (!board[checkI][checkJ] || board[checkI][checkJ].team == 'black') {
+
+                            numOfKingMoves -= 1
+                        }
+                        // if()
+                    }
+                    spotsChecked.push(individualMove)
+                    // NEED TO MAKE SURE HERE THAT IF MULTIPLE PIECES ARE ATTACKING THE SAME
+                    // POTENTIAL KING MOVE SPOT, THAT numOfKingMoves ONLY
+                    // GOES DOWN BY ONE
+                    // debugger
+                }
+
+            }
+            console.log("HOW MANY KING MOVES LEFT: ", numOfKingMoves)
+            if (numOfKingMoves == 0) {
+                state.checkMate = true
+            } else {
+                state.checkMate = false
+            }
+        }
+
+    }
+    if (state.checkMate) {
+        return
+    }
+    state.kingLook = undefined
+    console.log(state.kingLook)
+
+    // EVEN IF this occurs, we still need to make sure that there are
+    // no other pieces that can intercept check 
+    // ( i suppose the best way to do this would to be not putting a return statement
+    // in this if block, so that if it ever hits the else after it will set 
+    // state.checkMate back to false)
 }
 
 function checkForCheckMate() {
+    let king = state.whiteMoves.filter(p => p instanceof King)[0]
+
     if (state.checkBlock.length == 0) {
-        state.checkMate = true
+        // state.checkMate = true
+
+        kingEscape(king)
+        // This actually wont always work, if the checkBlock has no pieces
+        // the king should still technically be given the chance to evade (if possible)
         return
     }
     console.log("HITTING checkForCheckMate")
     for (let i = 0; i < state.whiteMoves.length; i++) {
+        // I WANT TO LOOK AT THE KING LAST, SO THAT IF WE FINALLY DO LOOK AT THE KING AND 
+        // HE CANNOT MOVE, WE ARE CERTAIN OF CHECKMATE 
         if (state.whiteMoves[i] instanceof King && i != state.whiteMoves.length - 1) {
             let currentKing = state.whiteMoves.splice(i, 1)
             state.whiteMoves.push(currentKing[0])
@@ -1073,91 +1166,92 @@ function checkForCheckMate() {
                     console.log("INCLUDED! ", state.whiteMoves[i].moves[k])
                     console.log("PIECE: ", state.whiteMoves[i])
                     if (state.whiteMoves[i] instanceof King) {
-                        state.kingLook = 'white'
-                        console.log("WE've FOUND KING INSTANCE")
-                        console.log("IS KING LAST MOVE IN WHITEMOVES? :", i == state.whiteMoves.length - 1)
-                        // THIS IS THE LAST PART, CHECK FOR KING 
-                        // if the king is the piece that can potentially block the check
-                        // determine if the king can capture the piece checking
-                        // if not, determine if the king can move out of check (into a safe spot)
-                        // if not, checkmate!
+                        kingEscape(state.whiteMoves[i])
+                        // state.kingLook = 'white'
+                        // console.log("WE've FOUND KING INSTANCE")
+                        // console.log("IS KING LAST MOVE IN WHITEMOVES? :", i == state.whiteMoves.length - 1)
+                        // // THIS IS THE LAST PART, CHECK FOR KING 
+                        // // if the king is the piece that can potentially block the check
+                        // // determine if the king can capture the piece checking
+                        // // if not, determine if the king can move out of check (into a safe spot)
+                        // // if not, checkmate!
 
 
-                        // see which moves the king can ACTUALLY make within it's moves array
-                        let allKingMoves = state.whiteMoves[i].moves
-                        let numOfKingMoves = allKingMoves.length
-                        let spotsChecked = []
-                        allKingMoves.forEach(m => {
-                            if (m.piece != null && m.piece.team == 'white') {
-                                numOfKingMoves -= 1
-                            }
-                        })
-                        console.log("ALL OF THE KING's POSSIBLE MOVES: ", allKingMoves)
+                        // // see which moves the king can ACTUALLY make within it's moves array
+                        // let allKingMoves = state.whiteMoves[i].moves
+                        // let numOfKingMoves = allKingMoves.length
+                        // let spotsChecked = []
+                        // allKingMoves.forEach(m => {
+                        //     if (m.piece != null && m.piece.team == 'white') {
+                        //         numOfKingMoves -= 1
+                        //     }
+                        // })
+                        // console.log("ALL OF THE KING's POSSIBLE MOVES: ", allKingMoves)
 
 
-                        for (let x = 0; x < state.whiteMoves[i].moves.length; x++) {
-                            // state.checkMate = true
-                            let m = state.whiteMoves[i].moves[x]
-                            // state.whiteMoves[i].moves.forEach((m, x) => {
-                            // let [newI,newJ] = JSON.parse(m.spot)
-                            console.log(m.spot)
-                            console.log(state.kingLook)
-                            // state.movingPiece = state.whiteMoves[i]
-                            // console.log("STATE MOVING PIECE: :",state.movingPiece)
-                            // movePiece(newI, newJ)
-                            console.log("STATE BLACK MOVES, to see if king can evade check: ", state.blackMoves)
+                        // for (let x = 0; x < state.whiteMoves[i].moves.length; x++) {
+                        //     // state.checkMate = true
+                        //     let m = state.whiteMoves[i].moves[x]
+                        //     // state.whiteMoves[i].moves.forEach((m, x) => {
+                        //     // let [newI,newJ] = JSON.parse(m.spot)
+                        //     console.log(m.spot)
+                        //     console.log(state.kingLook)
+                        //     // state.movingPiece = state.whiteMoves[i]
+                        //     // console.log("STATE MOVING PIECE: :",state.movingPiece)
+                        //     // movePiece(newI, newJ)
+                        //     console.log("STATE BLACK MOVES, to see if king can evade check: ", state.blackMoves)
 
-                            for (let blackMoveIdx = 0; blackMoveIdx < state.blackMoves.length; blackMoveIdx++) {
-                                console.log(`BLACK PIECE MOVES ${blackMoveIdx}`, state.blackMoves[blackMoveIdx])
-                                for (let oneMove = 0; oneMove < state.blackMoves[blackMoveIdx].moves.length; oneMove++) {
-                                    let individualMove = state.blackMoves[blackMoveIdx].moves[oneMove].spot
-                                    // console.log('EACH INDIVIDUAL BLACK MOVE: ',state.blackMoves[blackMoveIdx].moves[oneMove])
-                                    console.log("INDIVIDUAL MOVE: ", individualMove)
-                                    if (m.spot == individualMove) {
-                                        console.log("FOUND M SPOT = INDIV MOVE")
-                                        if (!spotsChecked.includes(individualMove)) {
-                                            let [checkI, checkJ] = JSON.parse(individualMove)
-                                            if (!board[checkI][checkJ] || board[checkI][checkJ].team == 'black') {
+                        //     for (let blackMoveIdx = 0; blackMoveIdx < state.blackMoves.length; blackMoveIdx++) {
+                        //         console.log(`BLACK PIECE MOVES ${blackMoveIdx}`, state.blackMoves[blackMoveIdx])
+                        //         for (let oneMove = 0; oneMove < state.blackMoves[blackMoveIdx].moves.length; oneMove++) {
+                        //             let individualMove = state.blackMoves[blackMoveIdx].moves[oneMove].spot
+                        //             // console.log('EACH INDIVIDUAL BLACK MOVE: ',state.blackMoves[blackMoveIdx].moves[oneMove])
+                        //             console.log("INDIVIDUAL MOVE: ", individualMove)
+                        //             if (m.spot == individualMove) {
+                        //                 console.log("FOUND M SPOT = INDIV MOVE")
+                        //                 if (!spotsChecked.includes(individualMove)) {
+                        //                     let [checkI, checkJ] = JSON.parse(individualMove)
+                        //                     if (!board[checkI][checkJ] || board[checkI][checkJ].team == 'black') {
 
-                                                numOfKingMoves -= 1
-                                            }
-                                            // if()
-                                        }
-                                        spotsChecked.push(individualMove)
-                                        // NEED TO MAKE SURE HERE THAT IF MULTIPLE PIECES ARE ATTACKING THE SAME
-                                        // POTENTIAL KING MOVE SPOT, THAT numOfKingMoves ONLY
-                                        // GOES DOWN BY ONE
-                                        // debugger
-                                    }
+                        //                         numOfKingMoves -= 1
+                        //                     }
+                        //                     // if()
+                        //                 }
+                        //                 spotsChecked.push(individualMove)
+                        //                 // NEED TO MAKE SURE HERE THAT IF MULTIPLE PIECES ARE ATTACKING THE SAME
+                        //                 // POTENTIAL KING MOVE SPOT, THAT numOfKingMoves ONLY
+                        //                 // GOES DOWN BY ONE
+                        //                 // debugger
+                        //             }
 
-                                }
-                                console.log("HOW MANY KING MOVES LEFT: ", numOfKingMoves)
-                                if (numOfKingMoves == 0) {
-                                    state.checkMate = true
-                                } else {
-                                    state.checkMate = false
-                                }
-                            }
+                        //         }
+                        //         console.log("HOW MANY KING MOVES LEFT: ", numOfKingMoves)
+                        //         if (numOfKingMoves == 0) {
+                        //             state.checkMate = true
+                        //         } else {
+                        //             state.checkMate = false
+                        //         }
+                        //     }
 
-                        }
-                        if (state.checkMate) {
-                            return
-                        }
-                        state.kingLook = undefined
-                        console.log(state.kingLook)
+                        // }
+                        // if (state.checkMate) {
+                        //     return
+                        // }
+                        // state.kingLook = undefined
+                        // console.log(state.kingLook)
 
-                        // EVEN IF this occurs, we still need to make sure that there are
-                        // no other pieces that can intercept check 
-                        // ( i suppose the best way to do this would to be not putting a return statement
-                        // in this if block, so that if it ever hits the else after it will set 
-                        // state.checkMate back to false)
+                        // // EVEN IF this occurs, we still need to make sure that there are
+                        // // no other pieces that can intercept check 
+                        // // ( i suppose the best way to do this would to be not putting a return statement
+                        // // in this if block, so that if it ever hits the else after it will set 
+                        // // state.checkMate back to false)
 
 
 
                     } else {
                         state.checkMate = false
                         console.log('state checkMate: ', state.checkMate)
-                        if(k == state.checkBlock.length -1){
+                        if (k == state.checkBlock.length - 1) {
                             return
                         }
                     }
