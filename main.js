@@ -1021,7 +1021,7 @@ function buildCheckBlock(king) {
                 }
             }
         } if (p instanceof Knight) {
-
+            state.checkBlock[0].push([idx,jdx])
             // if knight can be captured (or king can move away), no mate, if not, mate
             // if (kingI - 1 == idx) {
             //     if (kingJ - 2 == jdx) {
@@ -1146,6 +1146,10 @@ function checkForCheckMate(){
                         state.checkMate = false
                         console.log('state checkMate: ', state.checkMate)
                         return
+                    }
+                } else {
+                    if(k == state.checkBlock.length -1){
+                        state.checkMate = true
                     }
                 }
 
