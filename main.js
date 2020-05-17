@@ -1033,6 +1033,11 @@ function buildCheckBlock(king) {
     // ONLY WAY TO ESCAPE CHECK IS FOR KING TO MOVE TO FREE SPACE
 
     // IF THERE IS OVERLAP, TURN STATE.CHECKBLOCK INTO THOSE OVERLAPPING SPOTS
+
+    // Later on, for efficiency, i believe if 2 or more pieces are checking a king,
+    // the only way to escape is for the king to move
+    // thus, if state.whiteCheck.length > 1, no need to run thru checkblock. 
+    // only need to run kingEscape
     if (state.checkBlock.length > 1) {
         let result = state.checkBlock.shift().reduce(function (res, v) {
             if (res.indexOf(v) === -1 && state.checkBlock.every(function (a) {
