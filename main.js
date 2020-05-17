@@ -975,7 +975,7 @@ function buildCheckBlock(king) {
                 while (jdx > kingJ) {
                     state.checkBlock[i].push([idx, jdx])
                     jdx--
-                }
+                }   
                 while (jdx < kingJ) {
                     state.checkBlock[i].push([idx, jdx])
                     jdx++
