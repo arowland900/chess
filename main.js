@@ -959,9 +959,12 @@ function buildCheckBlock(king) {
     // state.checkMate = true
     let kingI = Number(king.pos.split('')[1])
     let kingJ = Number(king.pos.split('')[3])
-    let rowOne = []
-    state.checkBlock.push(rowOne)
+    // let rowOne = []
     for (let i = 0; i < state.whiteCheck.length; i++) {
+        state.checkBlock.push([])
+        console.log("THIS IS I: ", i)
+        console.log("THIS IS STATE CHECK BLOCK: ", JSON.stringify(state.checkBlock))
+        console.log("THIS IS STATE CHECK BLOCK AT I: ", JSON.stringify(state.checkBlock[i]))
         let p = state.whiteCheck[i]
         let idx = Number(p.pos.split('')[1])
         let jdx = Number(p.pos.split('')[3])
@@ -970,20 +973,20 @@ function buildCheckBlock(king) {
             // console.log("PIECE CHECKING KING IS QUEEN")
             if (kingI == idx) {
                 while (jdx > kingJ) {
-                    state.checkBlock[0].push([idx, jdx])
+                    state.checkBlock[i].push([idx, jdx])
                     jdx--
                 }
                 while (jdx < kingJ) {
-                    state.checkBlock[0].push([idx, jdx])
+                    state.checkBlock[i].push([idx, jdx])
                     jdx++
                 }
             } else if (kingJ == jdx) {
                 while (idx > kingI) {
-                    state.checkBlock[0].push([idx, jdx])
+                    state.checkBlock[i].push([idx, jdx])
                     idx--
                 }
                 while (idx < kingI) {
-                    state.checkBlock[0].push([idx, jdx])
+                    state.checkBlock[i].push([idx, jdx])
                     idx++
                 }
             }
@@ -993,13 +996,13 @@ function buildCheckBlock(king) {
                 if (kingI < idx) {
                     if (kingJ < jdx) {
                         while (kingI < idx) {
-                            state.checkBlock[0].push([idx, jdx])
+                            state.checkBlock[i].push([idx, jdx])
                             idx--
                             jdx--
                         }
                     } else {
                         while (kingI < idx) {
-                            state.checkBlock[0].push([idx, jdx])
+                            state.checkBlock[i].push([idx, jdx])
                             idx--
                             jdx++
                         }
@@ -1007,13 +1010,13 @@ function buildCheckBlock(king) {
                 } else {
                     if (kingJ < jdx) {
                         while (kingI > idx) {
-                            state.checkBlock[0].push([idx, jdx])
+                            state.checkBlock[i].push([idx, jdx])
                             idx++
                             jdx--
                         }
                     } else {
                         while (kingI > idx) {
-                            state.checkBlock[0].push([idx, jdx])
+                            state.checkBlock[i].push([idx, jdx])
                             idx++
                             jdx++
                         }
@@ -1021,13 +1024,8 @@ function buildCheckBlock(king) {
                 }
             }
         } if (p instanceof Knight) {
-            state.checkBlock[0].push([idx,jdx])
+            state.checkBlock[i].push([idx,jdx])
             // if knight can be captured (or king can move away), no mate, if not, mate
-            // if (kingI - 1 == idx) {
-            //     if (kingJ - 2 == jdx) {
-
-            //     }
-            // }
         }
 
     }
