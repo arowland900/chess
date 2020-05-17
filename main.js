@@ -1080,6 +1080,7 @@ function checkForCheckMate(){
                                 numOfKingMoves -=1
                             } 
                         })
+                        console.log("ALL OF THE KING's POSSIBLE MOVES: ", allKingMoves)
 
 
                         for(let x = 0; x < state.whiteMoves[i].moves.length; x++){
@@ -1103,7 +1104,12 @@ function checkForCheckMate(){
                                     if(m.spot == individualMove){
                                         console.log("FOUND M SPOT = INDIV MOVE")
                                         if(!spotsChecked.includes(individualMove)){
-                                            numOfKingMoves -=1
+                                            let [checkI, checkJ] = JSON.parse(individualMove)
+                                            if(!board[checkI][checkJ]){
+
+                                                numOfKingMoves -=1
+                                            }
+                                            // if()
                                         }
                                         spotsChecked.push(individualMove)
                                         // NEED TO MAKE SURE HERE THAT IF MULTIPLE PIECES ARE ATTACKING THE SAME
@@ -1111,6 +1117,7 @@ function checkForCheckMate(){
                                         // GOES DOWN BY ONE
                                         // debugger
                                     }
+
                                 }
                                 console.log("HOW MANY KING MOVES LEFT: ", numOfKingMoves)
                                 if(numOfKingMoves == 0){
