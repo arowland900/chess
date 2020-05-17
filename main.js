@@ -1105,7 +1105,7 @@ function checkForCheckMate(){
                                         console.log("FOUND M SPOT = INDIV MOVE")
                                         if(!spotsChecked.includes(individualMove)){
                                             let [checkI, checkJ] = JSON.parse(individualMove)
-                                            if(!board[checkI][checkJ]){
+                                            if(!board[checkI][checkJ] || board[checkI][checkJ].team == 'black'){
 
                                                 numOfKingMoves -=1
                                             }
