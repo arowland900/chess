@@ -1063,7 +1063,7 @@ function kingEscape(king) {
     // determine if the king can capture the piece checking
     // if not, determine if the king can move out of check (into a safe spot)
     // if not, checkmate!
-
+    let opponentMoves = king.team == 'white' ? state.whiteMoves : state.blackMoves
 
     // see which moves the king can ACTUALLY make within it's moves array
     let allKingMoves = king.moves
@@ -1086,13 +1086,13 @@ function kingEscape(king) {
         // console.log( state.movingPiece = king
         // console.log("STATE MOVING PIECE: :",state.movingPiece)
         // movePiece(newI, newJ)
-        console.log("STATE BLACK MOVES, to see if king can evade check: ", state.blackMoves)
+        console.log("STATE BLACK MOVES, to see if king can evade check: ", opponentMoves)
 
-        for (let blackMoveIdx = 0; blackMoveIdx < state.blackMoves.length; blackMoveIdx++) {
-            console.log(`BLACK PIECE MOVES ${blackMoveIdx}`, state.blackMoves[blackMoveIdx])
-            for (let oneMove = 0; oneMove < state.blackMoves[blackMoveIdx].moves.length; oneMove++) {
-                let individualMove = state.blackMoves[blackMoveIdx].moves[oneMove].spot
-                // console.log('EACH INDIVIDUAL BLACK MOVE: ',state.blackMoves[blackMoveIdx].moves[oneMove])
+        for (let movesIdx = 0; movesIdx < opponentMoves.length; movesIdx++) {
+            console.log(`BLACK PIECE MOVES ${movesIdx}`, opponentMoves[movesIdx])
+            for (let oneMove = 0; oneMove < opponentMoves[movesIdx].moves.length; oneMove++) {
+                let individualMove = opponentMoves[movesIdx].moves[oneMove].spot
+                // console.log('EACH INDIVIDUAL BLACK MOVE: ',opponentMoves[blackMoveIdx].moves[oneMove])
                 console.log("INDIVIDUAL MOVE: ", individualMove)
                 if (m.spot == individualMove) {
                     console.log("FOUND M SPOT = INDIV MOVE")
