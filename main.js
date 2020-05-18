@@ -1257,7 +1257,7 @@ function renderBoard() {
         })
     })
 
-    if (!state.whiteCheck.length && !state.whiteCheck.length) {
+    if (!state.whiteCheck.length && !state.blackCheck.length) {
         msg.textContent = `Chess! - Turn: ${players[state.turn].charAt(0).toUpperCase()}${players[state.turn].slice(1)}`
     } else if (state.whiteCheck.length) {
         state.checkMate ? msg.textContent = `CHECKMATE!` : msg.textContent = `White is in check!`
