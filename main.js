@@ -1138,6 +1138,7 @@ function checkForCheckMate(team) {
     ? state.whiteMoves.filter(p => p instanceof King)[0] 
     : state.blackMoves.filter(p => p instanceof King)[0] 
 
+    let teamMoves = team == 'white' ? state.whiteMoves : state.blackMoves
     if (state.checkBlock.length == 0) {
         // state.checkMate = true
 
@@ -1145,29 +1146,29 @@ function checkForCheckMate(team) {
         return
     }
     console.log("HITTING checkForCheckMate")
-    for (let i = 0; i < state.whiteMoves.length; i++) {
+    for (let i = 0; i < teamMoves.length; i++) {
         // I WANT TO LOOK AT THE KING LAST, SO THAT IF WE FINALLY DO LOOK AT THE KING AND 
         // HE CANNOT MOVE, WE ARE CERTAIN OF CHECKMATE 
-        if (state.whiteMoves[i] instanceof King && i != state.whiteMoves.length - 1) {
-            let currentKing = state.whiteMoves.splice(i, 1)
-            state.whiteMoves.push(currentKing[0])
+        if (teamMoves[i] instanceof King && i != teamMoves.length - 1) {
+            let currentKing = teamMoves.splice(i, 1)
+            teamMoves.push(currentKing[0])
         }
-        console.log("STATE WHITE MOVES: ", state.whiteMoves)
-        console.log("CURRENT PIECE BEING LOOKED AT: ", state.whiteMoves[i])
-        console.log("ALL CURRENT MOVES FOR PARTICULAR PIECE", state.whiteMoves[i].moves)
-        // console.log(state.whiteMoves[i])
-        for (let j = 0; j < state.whiteMoves[i].moves.length; j++) {
+        console.log("STATE WHITE MOVES: ", teamMoves)
+        console.log("CURRENT PIECE BEING LOOKED AT: ", teamMoves[i])
+        console.log("ALL CURRENT MOVES FOR PARTICULAR PIECE", teamMoves[i].moves)
+        // console.log(teamMoves[i])
+        for (let j = 0; j < teamMoves[i].moves.length; j++) {
             // check king last
 
             for (let k = 0; k < state.checkBlock.length; k++) {
                 console.log("STRINGIFY CHECKBLOCK AT K ", k, JSON.stringify(state.checkBlock[k]))
-                console.log("PIECE BEING LOOKED AT: ", state.whiteMoves[i])
-                console.log(" WHITEMOVES AT J ", j, state.whiteMoves[i].moves[j].spot)
-                if (JSON.stringify(state.checkBlock[k]).includes(state.whiteMoves[i].moves[j].spot)) {
-                    console.log("INCLUDED! ", state.whiteMoves[i].moves[k])
-                    console.log("PIECE: ", state.whiteMoves[i])
-                    if (state.whiteMoves[i] instanceof King) {
-                        kingEscape(state.whiteMoves[i])
+                console.log("PIECE BEING LOOKED AT: ", teamMoves[i])
+                console.log(" WHITEMOVES AT J ", j, teamMoves[i].moves[j].spot)
+                if (JSON.stringify(state.checkBlock[k]).includes(teamMoves[i].moves[j].spot)) {
+                    console.log("INCLUDED! ", teamMoves[i].moves[k])
+                    console.log("PIECE: ", teamMoves[i])
+                    if (teamMoves[i] instanceof King) {
+                        kingEscape(teamMoves[i])
                     } else {
                         state.checkMate = false
                         console.log('state checkMate: ', state.checkMate)
